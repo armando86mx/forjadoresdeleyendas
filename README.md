@@ -65,5 +65,5 @@ Luego haz push a `main`. La rama `main` es la fuente del sitio; un GitHub Action
 
 - **Repo:** https://github.com/armando86mx/forjadoresdeleyendas
 - **Rama fuente:** `main`
-- **Rama de producción:** `hostinger-deploy` (se actualiza automáticamente tras push a main)
+- **Rama de producción:** `hostinger-deploy` (la actualizará automáticamente un GitHub Action tras cada push a `main`; pendiente de configurar — ver tabla de pendientes)
 - **Analytics:** Variables de entorno `PUBLIC_GA4_ID`, `PUBLIC_CLARITY_ID`
