@@ -17,7 +17,7 @@ const labels = { cronicas: 'Crónica', aliados: 'Aliados' };
     <p class="mt-2 text-sm opacity-80">Crónicas y guías sobre rol y Dungeons &amp; Dragons en Puebla, escritas desde la barra de la posada.</p>
     <div class="mt-10 space-y-6">
       {posts.map((post) => (
-        <a href={`/cronicas/${post.id}/`} class="block rounded-lg bg-parchment-light p-6 shadow-sm transition-shadow hover:shadow-md">
+        <a href={`/cronicas/${post.id}/`} class="card-lift block rounded-lg bg-parchment-light p-6 shadow-sm">
           <p class="text-xs font-bold uppercase tracking-widest text-fire">{labels[post.data.categoria]}</p>
           <h2 class="mt-1 font-display text-2xl text-wood">{post.data.title}</h2>
           <p class="mt-2 text-sm opacity-80">{post.data.description}</p>

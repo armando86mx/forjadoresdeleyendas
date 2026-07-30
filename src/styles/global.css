@@ -12,12 +12,57 @@
   --font-body: 'Inter Variable', sans-serif;
 }
 
-html {
-  scroll-behavior: smooth;
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
   @apply bg-parchment text-ink font-body antialiased;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+article p {
+  text-wrap: pretty;
+}
+
+/* Elevación al pasar el cursor: tarjetas enlazadas se levantan; informativas solo profundizan sombra */
+.card-lift,
+.card-raise {
+  transition:
+    transform 0.25s cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@media (hover: hover) {
+  .card-lift:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 12px 24px -8px rgb(43 31 20 / 0.18),
+      0 2px 6px rgb(43 31 20 / 0.08);
+  }
+
+  .card-raise:hover {
+    box-shadow:
+      0 8px 20px -8px rgb(43 31 20 / 0.15),
+      0 2px 4px rgb(43 31 20 / 0.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 article h1 {

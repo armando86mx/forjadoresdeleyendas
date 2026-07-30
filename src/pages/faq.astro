@@ -28,7 +28,7 @@ const jsonLd = JSON.stringify({
         <div class="mt-4 space-y-3">
           {cat.items.map((item) => (
             <details class="rounded-lg bg-parchment-light p-4 shadow-sm">
-              <summary class="cursor-pointer font-bold">{item.q}</summary>
+              <summary class="cursor-pointer rounded font-bold transition-colors duration-200 hover:text-fire focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber">{item.q}</summary>
               <p class="mt-2 opacity-90">{item.a}</p>
             </details>
           ))}
