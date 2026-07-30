@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import WhatsAppButton from '@/components/WhatsAppButton.astro';
-import { FAQ } from '@/data/faq';
+import { FAQ, DESTACADAS } from '@/data/faq';
 
 const jsonLd = JSON.stringify({
   '@context': 'https://schema.org',
@@ -21,15 +21,28 @@ const jsonLd = JSON.stringify({
 >
   <div class="mx-auto max-w-3xl px-4 py-16">
     <h1 class="font-display text-4xl font-bold text-wood">Preguntas frecuentes</h1>
-    <p class="mt-2 opacity-80">Todo lo que un aventurero debe saber antes de cruzar la puerta de la posada.</p>
+    <p class="mt-2 max-w-prose opacity-80">Todo lo que un aventurero debe saber antes de cruzar la puerta de la posada.</p>
+
+    <section class="mt-10">
+      <h2 class="font-display text-2xl text-fire">Lo que más preguntan</h2>
+      <div class="mt-4 space-y-3">
+        {DESTACADAS.map((item) => (
+          <details class="card rounded-lg border-2! border-amber/70! bg-parchment-light">
+            <summary class="flex min-h-11 cursor-pointer items-center rounded-lg p-4 font-bold transition-colors duration-200 hover:text-fire focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber">{item.q}</summary>
+            <p class="max-w-prose px-4 pb-4 opacity-90">{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
     {FAQ.map((cat) => (
       <section class="mt-10">
         <h2 class="font-display text-2xl text-fire">{cat.categoria}</h2>
         <div class="mt-4 space-y-3">
           {cat.items.map((item) => (
-            <details class="rounded-lg bg-parchment-light p-4 shadow-sm">
-              <summary class="cursor-pointer rounded font-bold transition-colors duration-200 hover:text-fire focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber">{item.q}</summary>
-              <p class="mt-2 opacity-90">{item.a}</p>
+            <details class="card rounded-lg bg-parchment-light">
+              <summary class="flex min-h-11 cursor-pointer items-center rounded-lg p-4 font-bold transition-colors duration-200 hover:text-fire focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber">{item.q}</summary>
+              <p class="max-w-prose px-4 pb-4 opacity-90">{item.a}</p>
             </details>
           ))}
         </div>

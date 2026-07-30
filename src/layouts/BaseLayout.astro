@@ -5,6 +5,7 @@ import '@fontsource/cinzel/700.css';
 import '@fontsource-variable/inter';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
+import FloatingWhatsApp from '@/components/FloatingWhatsApp.astro';
 import Analytics from '@/components/Analytics.astro';
 import { SITE } from '@/lib/site';
 
@@ -42,5 +43,6 @@ const canonical = new URL(Astro.url.pathname, SITE.url).href;
     <Header />
     <main class="flex-1"><slot /></main>
     <Footer />
+    <FloatingWhatsApp />
   </body>
 </html>

@@ -1,8 +1,13 @@
 ---
-interface Props { eyebrow?: string; title: string }
-const { eyebrow, title } = Astro.props;
+interface Props {
+  title: string;
+  /** Texto opcional SOLO cuando aporta información que el título no da. */
+  eyebrow?: string;
+}
+const { title, eyebrow } = Astro.props;
 ---
 <div class="mx-auto mb-10 max-w-2xl text-center">
+  <p class="ornament mb-3 text-sm" aria-hidden="true">✦</p>
   {eyebrow && <p class="mb-1 text-sm font-bold uppercase tracking-widest text-wood">{eyebrow}</p>}
   <h2 class="font-display text-3xl font-bold text-wood sm:text-4xl">{title}</h2>
 </div>

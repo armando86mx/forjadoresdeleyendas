@@ -2,10 +2,10 @@ export const FAQ = [
   {
     categoria: 'Sesiones y precios',
     items: [
-      { q: '¿Cuánto cuesta una sesión de rol?', a: 'Una sesión suelta (one-shot) cuesta entre $300 y $500 MXN por persona e incluye Guardián de Historias, ambientación, comida y bebida. También tenemos paquetes de campaña: corta de 4 sesiones por $1,800 MXN, media de 6 sesiones por $2,400 MXN y larga de 10 sesiones por $3,500 MXN por persona.' },
+      { destacada: true, q: '¿Puedo unirme si nunca he jugado rol?', a: '¡Claro! Nuestros Guardianes de Historias te guían desde la primera tirada. No necesitas saber nada antes de llegar: las reglas se aprenden jugando.' },
+      { destacada: true, q: '¿Cuánto cuesta una sesión de rol?', a: 'Una sesión suelta (one-shot) cuesta entre $300 y $500 MXN por persona e incluye Guardián de Historias, ambientación, comida y bebida. También tenemos paquetes de campaña: corta de 4 sesiones por $1,800 MXN, media de 6 sesiones por $2,400 MXN y larga de 10 sesiones por $3,500 MXN por persona.' },
       { q: '¿Qué incluye la sesión?', a: 'Un Guardián de Historias (Dungeon Master) experto, escenografía digital e interactiva, comida y bebida, y acceso a dados, miniaturas y accesorios de juego. Tú solo trae a tu grupo y tus ganas de aventura.' },
-      { q: '¿Cuántas personas pueden participar?', a: 'Las sesiones son para grupos de 3 a 6 aventureros.' },
-      { q: '¿Puedo unirme si nunca he jugado rol?', a: '¡Claro! Nuestros Guardianes de Historias te guían desde la primera tirada. No necesitas saber nada antes de llegar: las reglas se aprenden jugando.' },
+      { q: '¿Cuántas personas pueden participar?', a: 'Las sesiones son para grupos de 3 a 6 aventureros. ¿Son más? Escríbenos: coordinamos mesas y horarios para grupos grandes y eventos.' },
     ],
   },
   {
@@ -32,10 +32,12 @@ export const FAQ = [
   {
     categoria: 'Contacto',
     items: [
+      { destacada: true, q: '¿Organizan team building para empresas?', a: 'Sí. Armamos sesiones de rol pensadas para equipos de trabajo, con dinámicas de aventura que sueltan a cualquier grupo y comida incluida. Cotiza tu evento por WhatsApp y arma la campaña de tu empresa.' },
       { q: '¿Cuáles son los canales de comunicación?', a: 'WhatsApp y nuestras redes sociales (Instagram, X, YouTube, TikTok y Twitch). Respondemos lo más rápido posible.' },
       { q: '¿Tienen eventos especiales?', a: 'Sí: noches temáticas, sesiones especiales y colaboraciones con creadores geek. Anunciamos todo en redes y en nuestras Crónicas.' },
       { q: '¿Tienen programa de referidos?', a: 'Estamos forjando uno: si traes a un amigo, ambos obtendrán 10% de descuento en su próxima sesión. Pregunta por WhatsApp si ya está activo.' },
-      { q: '¿Organizan team building para empresas?', a: 'Sí. Armamos sesiones de rol pensadas para equipos de trabajo, con dinámicas de aventura que sueltan a cualquier grupo y comida incluida. Cotiza tu evento por WhatsApp y arma la campaña de tu empresa.' },
     ],
   },
 ];
+
+export const DESTACADAS = FAQ.flatMap((c) => c.items).filter((i) => 'destacada' in i && i.destacada);

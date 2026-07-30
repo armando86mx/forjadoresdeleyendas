@@ -3,7 +3,9 @@
 @theme {
   --color-parchment: #f3e3cb;
   --color-parchment-light: #faf3e3;
+  --color-parchment-deep: #e7d0ad;
   --color-wood: #5c4020;
+  --color-wood-dark: #3d2a15;
   --color-ink: #2b1f14;
   --color-amber: #e8a33d;
   --color-fire: #a64f22;
@@ -32,9 +34,16 @@ article p {
   text-wrap: pretty;
 }
 
-/* Elevación al pasar el cursor: tarjetas enlazadas se levantan; informativas solo profundizan sombra */
-.card-lift,
-.card-raise {
+/* Sistema de superficies: las tarjetas se definen EN REPOSO (borde + sombra reales);
+   la elevación en hover queda reservada a elementos enlazados. */
+.card {
+  border: 1px solid rgb(92 64 32 / 0.35);
+  box-shadow:
+    0 2px 8px rgb(43 31 20 / 0.12),
+    0 1px 2px rgb(43 31 20 / 0.08);
+}
+
+.card-lift {
   transition:
     transform 0.25s cubic-bezier(0.25, 1, 0.5, 1),
     box-shadow 0.25s cubic-bezier(0.25, 1, 0.5, 1);
@@ -42,17 +51,36 @@ article p {
 
 @media (hover: hover) {
   .card-lift:hover {
-    transform: translateY(-4px);
+    transform: translateY(-6px);
     box-shadow:
-      0 12px 24px -8px rgb(43 31 20 / 0.18),
-      0 2px 6px rgb(43 31 20 / 0.08);
+      0 18px 32px -10px rgb(43 31 20 / 0.28),
+      0 4px 8px rgb(43 31 20 / 0.1);
   }
+}
 
-  .card-raise:hover {
-    box-shadow:
-      0 8px 20px -8px rgb(43 31 20 / 0.15),
-      0 2px 4px rgb(43 31 20 / 0.06);
-  }
+/* Ornamento de sección: sustituye a los eyebrows genéricos */
+.ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: var(--color-fire);
+}
+
+.ornament::before,
+.ornament::after {
+  content: '';
+  height: 1px;
+  width: 3.5rem;
+  background: linear-gradient(to var(--ornament-dir, right), transparent, rgb(166 79 34 / 0.6));
+}
+
+.ornament::before {
+  --ornament-dir: right;
+}
+
+.ornament::after {
+  --ornament-dir: left;
 }
 
 @media (prefers-reduced-motion: reduce) {
