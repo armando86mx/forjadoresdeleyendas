@@ -1,0 +1,44 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import WhatsAppButton from '@/components/WhatsAppButton.astro';
+import { FAQ } from '@/data/faq';
+
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ.flatMap((c) =>
+    c.items.map((i) => ({
+      '@type': 'Question',
+      name: i.q,
+      acceptedAnswer: { '@type': 'Answer', text: i.a },
+    })),
+  ),
+});
+---
+<BaseLayout
+  title="Preguntas frecuentes — Forjadores de Leyendas"
+  description="Precios, reservaciones, políticas y todo lo que necesitas saber antes de tu sesión de rol en la posada."
+>
+  <div class="mx-auto max-w-3xl px-4 py-16">
+    <h1 class="font-display text-4xl font-bold text-wood">Preguntas frecuentes</h1>
+    <p class="mt-2 opacity-80">Todo lo que un aventurero debe saber antes de cruzar la puerta de la posada.</p>
+    {FAQ.map((cat) => (
+      <section class="mt-10">
+        <h2 class="font-display text-2xl text-fire">{cat.categoria}</h2>
+        <div class="mt-4 space-y-3">
+          {cat.items.map((item) => (
+            <details class="rounded-lg bg-parchment-light p-4 shadow-sm">
+              <summary class="cursor-pointer font-bold">{item.q}</summary>
+              <p class="mt-2 opacity-90">{item.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+    ))}
+    <div class="mt-12 text-center">
+      <p class="mb-4 font-display text-xl">¿Te quedó alguna duda?</p>
+      <WhatsAppButton message="Hola, tengo una pregunta sobre las sesiones de rol. 🤔" label="Pregúntale al posadero" />
+    </div>
+  </div>
+  <script type="application/ld+json" set:html={jsonLd} is:inline />
+</BaseLayout>
