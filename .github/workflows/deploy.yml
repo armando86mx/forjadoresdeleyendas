@@ -32,7 +32,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           publish_branch: hostinger-deploy
-          force_orphan: true
       - name: Ping IndexNow
         run: |
           curl -s -X POST "https://api.indexnow.org/indexnow" \
