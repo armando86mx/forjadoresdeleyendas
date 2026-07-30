@@ -14,73 +14,92 @@
   --font-body: 'Inter Variable', sans-serif;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-behavior: smooth;
+/* En @layer base, las utilidades de Tailwind (capa utilities) siempre pueden
+   sobreescribir estas reglas — evita choques como article a vs. botones. */
+@layer base {
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    @apply bg-parchment text-ink font-body antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  article h1 {
+    @apply text-4xl font-bold;
+  }
+
+  article h2 {
+    @apply font-display text-2xl text-wood mt-8;
+  }
+
+  article p {
+    @apply mt-4 leading-relaxed;
+    text-wrap: pretty;
+  }
+
+  article a {
+    @apply text-fire underline underline-offset-2 hover:text-amber;
   }
 }
 
-body {
-  @apply bg-parchment text-ink font-body antialiased;
-}
-
-h1,
-h2,
-h3 {
-  text-wrap: balance;
-}
-
-article p {
-  text-wrap: pretty;
-}
-
-/* Sistema de superficies: las tarjetas se definen EN REPOSO (borde + sombra reales);
-   la elevación en hover queda reservada a elementos enlazados. */
-.card {
-  border: 1px solid rgb(92 64 32 / 0.35);
-  box-shadow:
-    0 2px 8px rgb(43 31 20 / 0.12),
-    0 1px 2px rgb(43 31 20 / 0.08);
-}
-
-.card-lift {
-  transition:
-    transform 0.25s cubic-bezier(0.25, 1, 0.5, 1),
-    box-shadow 0.25s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-@media (hover: hover) {
-  .card-lift:hover {
-    transform: translateY(-6px);
+@layer components {
+  /* Sistema de superficies: las tarjetas se definen EN REPOSO (borde + sombra reales);
+     la elevación en hover queda reservada a elementos enlazados. */
+  .card {
+    border: 1px solid rgb(92 64 32 / 0.35);
     box-shadow:
-      0 18px 32px -10px rgb(43 31 20 / 0.28),
-      0 4px 8px rgb(43 31 20 / 0.1);
+      0 2px 8px rgb(43 31 20 / 0.12),
+      0 1px 2px rgb(43 31 20 / 0.08);
   }
-}
 
-/* Ornamento de sección: sustituye a los eyebrows genéricos */
-.ornament {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  color: var(--color-fire);
-}
+  .card-lift {
+    transition:
+      transform 0.25s cubic-bezier(0.25, 1, 0.5, 1),
+      box-shadow 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+  }
 
-.ornament::before,
-.ornament::after {
-  content: '';
-  height: 1px;
-  width: 3.5rem;
-  background: linear-gradient(to var(--ornament-dir, right), transparent, rgb(166 79 34 / 0.6));
-}
+  @media (hover: hover) {
+    .card-lift:hover {
+      transform: translateY(-6px);
+      box-shadow:
+        0 18px 32px -10px rgb(43 31 20 / 0.28),
+        0 4px 8px rgb(43 31 20 / 0.1);
+    }
+  }
 
-.ornament::before {
-  --ornament-dir: right;
-}
+  /* Ornamento de sección: sustituye a los eyebrows genéricos */
+  .ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    color: var(--color-fire);
+  }
 
-.ornament::after {
-  --ornament-dir: left;
+  .ornament::before,
+  .ornament::after {
+    content: '';
+    height: 1px;
+    width: 3.5rem;
+    background: linear-gradient(to var(--ornament-dir, right), transparent, rgb(166 79 34 / 0.6));
+  }
+
+  .ornament::before {
+    --ornament-dir: right;
+  }
+
+  .ornament::after {
+    --ornament-dir: left;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -91,20 +110,4 @@ article p {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-}
-
-article h1 {
-  @apply text-4xl font-bold;
-}
-
-article h2 {
-  @apply font-display text-2xl text-wood mt-8;
-}
-
-article p {
-  @apply mt-4 leading-relaxed;
-}
-
-article a {
-  @apply text-fire underline underline-offset-2 hover:text-amber;
 }

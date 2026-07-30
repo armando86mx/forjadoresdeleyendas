@@ -27,7 +27,7 @@ const jsonLd = JSON.stringify({
       <h2 class="font-display text-2xl text-fire">Lo que más preguntan</h2>
       <div class="mt-4 space-y-3">
         {DESTACADAS.map((item) => (
-          <details class="card rounded-lg border-2! border-amber/70! bg-parchment-light">
+          <details class="card rounded-lg border-2 border-amber/70 bg-parchment-light">
             <summary class="flex min-h-11 cursor-pointer items-center rounded-lg p-4 font-bold transition-colors duration-200 hover:text-fire focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber">{item.q}</summary>
             <p class="max-w-prose px-4 pb-4 opacity-90">{item.a}</p>
           </details>
