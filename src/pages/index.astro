@@ -1,7 +1,268 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import WhatsAppButton from '@/components/WhatsAppButton.astro';
+import SectionTitle from '@/components/SectionTitle.astro';
 import { SITE } from '@/lib/site';
+import { SESION, CAMPANAS } from '@/data/precios';
+import { MENU } from '@/data/menu';
+
+import heroTaberna from '@/assets/img/hero-taberna.jpg';
+import guardian from '@/assets/img/guardian.jpg';
+import mesaJuego from '@/assets/img/mesa-juego.jpg';
+import banquete from '@/assets/img/banquete.jpg';
+import escenografia from '@/assets/img/escenografia.jpg';
+import novatos from '@/assets/img/novatos.jpg';
+
+const pasos = [
+  {
+    titulo: 'Reúne a tu grupo',
+    texto: 'De 3 a 6 aventureros. Amigos, familia o tu equipo de trabajo.',
+  },
+  {
+    titulo: 'Elige tu destino',
+    texto: 'Escríbenos por WhatsApp y cuéntanos qué aventura buscan. Nosotros preparamos todo: reglas, dados, historia.',
+  },
+  {
+    titulo: 'Lanza el dado',
+    texto: 'Llega a la posada y déjate llevar. Tu Guardián de Historias se encarga de que tu primera partida sea legendaria.',
+  },
+];
+
+const incluye = [
+  {
+    titulo: 'Guardián de Historias',
+    texto: 'Más que un Dungeon Master: un narrador experto que adapta la aventura a tu grupo y convierte cada decisión en un momento épico.',
+    img: guardian,
+    alt: 'Guardián de Historias narrando una aventura de rol en la posada',
+  },
+  {
+    titulo: 'Escenografía inmersiva',
+    texto: 'Mapas digitales interactivos, iluminación y ambientación que te meten de lleno en la historia.',
+    img: escenografia,
+    alt: 'Escenografía digital e interactiva de una mazmorra de fantasía',
+  },
+  {
+    titulo: 'Banquete incluido',
+    texto: 'Comida y bebida temática servida en plena aventura. Ningún héroe pelea con el estómago vacío.',
+    img: banquete,
+    alt: 'Banquete temático servido durante una sesión de rol',
+  },
+  {
+    titulo: 'Todo el equipo',
+    texto: 'Dados, miniaturas, hojas de personaje y accesorios. Solo trae tu imaginación.',
+    img: mesaJuego,
+    alt: 'Mesa de juego con dados, miniaturas y hojas de personaje',
+  },
+];
+
+const hasMenuItem = MENU.map((m) => ({ '@type': 'MenuItem', name: m.nombre, description: m.descripcion }));
+
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Restaurant',
+  name: 'Forjadores de Leyendas',
+  description: 'Posada temática con sesiones privadas de Dungeons & Dragons y juegos de rol en Puebla.',
+  servesCuisine: 'Comida temática de fantasía',
+  url: 'https://forjadoresdeleyendas.mx',
+  telephone: '+522221890232',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'C. 12 Sur 908-1, Barrio de Analco',
+    addressLocality: 'Puebla',
+    addressRegion: 'Puebla',
+    postalCode: '72500',
+    addressCountry: 'MX',
+  },
+  sameAs: [
+    'https://x.com/Forjadleyendas',
+    'https://www.youtube.com/@ForjadoresdeLeyendas',
+    'https://www.instagram.com/forjadoresdeleyendas/',
+    'https://www.tiktok.com/@forjadoresdeleyendas_',
+    'https://www.twitch.tv/forjadoresdeleyendas',
+  ],
+  hasMenu: {
+    '@type': 'Menu',
+    name: 'El Banquete (menú de temporada)',
+    hasMenuSection: {
+      '@type': 'MenuSection',
+      name: 'Menú de temporada',
+      hasMenuItem,
+    },
+  },
+});
+
+const direccionCompleta = `${SITE.address.street}, ${SITE.address.neighborhood}, ${SITE.address.city}, ${SITE.address.state} ${SITE.address.zip}, México`;
 ---
-<BaseLayout title="Forjadores de Leyendas" description={SITE.description}>
-  <h1>En construcción</h1>
+<BaseLayout title="Forjadores de Leyendas — Sesiones de rol y D&D en Puebla" description={SITE.description}>
+  <section class="relative flex min-h-[85vh] items-center justify-center overflow-hidden">
+    <Image
+      src={heroTaberna}
+      alt="Interior cálido de la posada Forjadores de Leyendas, ambientada para una sesión de rol"
+      class="absolute inset-0 -z-20 h-full w-full object-cover"
+      widths={[640, 1024, 1600, 1920]}
+      sizes="100vw"
+      loading="eager"
+    />
+    <div class="absolute inset-0 -z-10 bg-ink/60"></div>
+    <div class="relative mx-auto max-w-3xl px-4 py-24 text-center text-parchment-light">
+      <h1 class="font-display text-4xl font-bold leading-tight sm:text-6xl">
+        Cada tirada de dados forja una leyenda
+      </h1>
+      <p class="mx-auto mt-6 max-w-2xl text-base opacity-90 sm:text-lg">
+        Sesiones privadas de Dungeons &amp; Dragons y juegos de rol en una posada temática en el corazón de Puebla. Con comida, bebida y un Guardián de Historias que hará tu aventura inolvidable.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <WhatsAppButton message="¡Saludos, Guardián! Quiero reservar una sesión de rol en la posada. 🎲" label="Reserva tu aventura" />
+        <a
+          href="/#precios"
+          class="inline-block rounded-lg border-2 border-fire px-6 py-3 font-display font-bold tracking-wide text-fire transition-colors hover:bg-fire hover:text-parchment-light"
+        >
+          Ver precios
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-parchment-light">
+    <div class="mx-auto max-w-6xl px-4 py-16">
+      <SectionTitle title="¿Nunca has jugado rol? Perfecto: las mejores leyendas empiezan en el nivel 1." />
+      <div class="grid gap-10 lg:grid-cols-2 lg:items-center">
+        <Image
+          src={novatos}
+          alt="Grupo de nuevos jugadores aprendiendo a jugar rol por primera vez en la posada"
+          class="w-full rounded-xl object-cover shadow-md"
+          widths={[400, 800, 1200]}
+          sizes="(min-width: 1024px) 50vw, 100vw"
+        />
+        <ol class="space-y-6">
+          {pasos.map((paso, i) => (
+            <li class="flex gap-4">
+              <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-fire font-display font-bold text-parchment-light">
+                {i + 1}
+              </span>
+              <div>
+                <h3 class="font-display text-xl font-bold text-wood">{paso.titulo}</h3>
+                <p class="mt-1 opacity-90">{paso.texto}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-parchment">
+    <div class="mx-auto max-w-6xl px-4 py-16">
+      <SectionTitle eyebrow="La experiencia" title="Qué incluye tu sesión" />
+      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        {incluye.map((item) => (
+          <div class="overflow-hidden rounded-xl bg-parchment-light shadow-sm">
+            <Image
+              src={item.img}
+              alt={item.alt}
+              class="h-48 w-full object-cover"
+              widths={[300, 600]}
+              sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+            />
+            <div class="p-5">
+              <h3 class="font-display text-lg font-bold text-wood">{item.titulo}</h3>
+              <p class="mt-2 text-sm opacity-90">{item.texto}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="precios" class="bg-parchment-light">
+    <div class="mx-auto max-w-6xl px-4 py-16">
+      <SectionTitle eyebrow="Precios" title="Elige tu aventura" />
+      <div class="grid gap-8 lg:grid-cols-4">
+        <div class="rounded-xl border-2 border-fire bg-parchment p-6 shadow-sm lg:col-span-1">
+          <h3 class="font-display text-xl font-bold text-wood">{SESION.titulo}</h3>
+          <p class="mt-2 font-display text-3xl font-bold text-fire">{SESION.precio}</p>
+          <p class="text-sm opacity-70">{SESION.unidad}</p>
+          <ul class="mt-4 space-y-2 text-sm">
+            {SESION.incluye.map((item) => (
+              <li class="flex gap-2">
+                <span class="text-fire">✦</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="grid gap-6 sm:grid-cols-3 lg:col-span-3">
+          {CAMPANAS.map((c) => (
+            <div class="rounded-xl bg-parchment p-6 text-center shadow-sm">
+              <h3 class="font-display text-lg font-bold text-wood">{c.nombre}</h3>
+              <p class="mt-1 text-sm opacity-70">{c.sesiones} sesiones</p>
+              <p class="mt-3 font-display text-2xl font-bold text-fire">{c.precio}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+      <p class="mt-8 text-center text-sm opacity-70">
+        Reserva con 48 h de anticipación. Cambios de fecha sin costo hasta 72 h antes.
+      </p>
+      <div class="mt-8 text-center">
+        <WhatsAppButton message="Hola, quiero reservar una campaña de rol. ¿Me cuentas los detalles? ⚔️" label="Arma tu campaña" />
+      </div>
+    </div>
+  </section>
+
+  <section id="banquete" class="bg-parchment">
+    <div class="mx-auto max-w-6xl px-4 py-16">
+      <SectionTitle eyebrow="El Banquete" title="Comida y bebida dignas de una leyenda" />
+      <Image
+        src={banquete}
+        alt="Banquete temático servido en la posada Forjadores de Leyendas"
+        class="mb-10 h-64 w-full rounded-xl object-cover shadow-md sm:h-80"
+        widths={[600, 1200, 1800]}
+        sizes="100vw"
+      />
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {MENU.map((item) => (
+          <div class="rounded-lg bg-parchment-light p-5 shadow-sm">
+            <h3 class="font-display text-base font-bold text-wood">{item.nombre}</h3>
+            <p class="mt-1 text-sm opacity-90">{item.descripcion}</p>
+          </div>
+        ))}
+      </div>
+      <p class="mt-8 text-center text-sm italic opacity-70">
+        Menú de temporada — cambia según la cosecha y el humor del posadero.
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-parchment-light">
+    <div class="mx-auto max-w-6xl px-4 py-16">
+      <SectionTitle eyebrow="Ubicación" title="Encuéntranos en el Barrio de Analco" />
+      <p class="mx-auto max-w-2xl text-center opacity-90">
+        A unos pasos del centro histórico de Puebla, en el Barrio de Analco.
+      </p>
+      <p class="mt-2 text-center font-display text-lg text-wood">{direccionCompleta}</p>
+      <div class="mt-8 overflow-hidden rounded-xl shadow-md">
+        <iframe
+          src="https://www.google.com/maps?q=C.+12+Sur+908-1,+Barrio+de+Analco,+Puebla&output=embed"
+          loading="lazy"
+          title="Mapa de la posada"
+          class="h-96 w-full border-0"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-ink text-parchment-light">
+    <div class="mx-auto max-w-3xl px-4 py-16 text-center">
+      <h2 class="font-display text-3xl font-bold sm:text-4xl">¿Listo para comenzar tu aventura?</h2>
+      <p class="mt-4 opacity-90">La posada tiene una mesa esperando a tu grupo. Que los dados decidan el resto.</p>
+      <div class="mt-8">
+        <WhatsAppButton message="¡Saludos, Guardián! Quiero reservar una sesión de rol en la posada. 🎲" label="Reserva tu aventura" />
+      </div>
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={jsonLd} is:inline />
 </BaseLayout>
