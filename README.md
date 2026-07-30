@@ -51,6 +51,10 @@ Luego haz push a `main`. La rama `main` es la fuente del sitio; un GitHub Action
 | Rama de deploy en Hostinger | Confirmar que Hostinger jala la rama `hostinger-deploy` (carpeta raíz = `public_html`) |
 | Menú real del restaurante | Editar `src/data/menu.ts` cuando Pollo lo confirme |
 | Google Search Console | Dar de alta la propiedad y enviar el sitemap |
+| Horario de la posada (FAQ + footer + JSON-LD openingHours) | Pollo/Armando |
+| Coordenadas geo para JSON-LD | Armando |
+| Perfil de Google Business al lanzar | Armando |
+| Migración a Astro 7 (CVEs sin patch en 5.x, riesgo bajo por sitio estático) | Programar |
 
 ## Estructura del proyecto
 
