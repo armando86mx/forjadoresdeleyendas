@@ -33,6 +33,9 @@ const canonical = new URL(Astro.url.pathname, SITE.url).href;
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="es_MX" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(ogImage, SITE.url).href} />
     <Analytics />
   </head>
   <body class="flex min-h-screen flex-col">

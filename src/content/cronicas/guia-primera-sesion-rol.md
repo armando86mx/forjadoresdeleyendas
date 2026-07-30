@@ -1,5 +1,5 @@
 ---
-title: 'Tu primera sesión de rol: guía para aventureros de nivel 1'
+title: 'Tu primera sesión de rol: guía para novatos'
 description: 'Nunca has jugado D&D y no sabes qué esperar. Esta guía del posadero te cuenta cómo es una sesión, qué llevar y por qué no necesitas saber reglas.'
 pubDate: 2026-07-30
 categoria: cronicas
@@ -36,5 +36,7 @@ Así, entre narración y decisión, va avanzando la historia hasta el final de l
 Nada. En serio. Nosotros ponemos la comida, la bebida, los dados, las miniaturas y la escenografía. Tú solo pones las ganas de vivir una historia y, si quieres, tu imaginación bien afilada.
 
 Tu ficha de personaje está en blanco, esperando que la primera línea la escribas tú. La mesa ya está puesta.
+
+¿Más dudas? El posadero ya respondió casi todas en las [preguntas frecuentes](/faq).
 
 [Reserva tu lugar en la posada](https://wa.me/522221890232?text=%C2%A1Saludos%2C%20Guardi%C3%A1n!%20Quiero%20reservar%20una%20sesi%C3%B3n%20de%20rol%20en%20la%20posada.%20%F0%9F%8E%B2)

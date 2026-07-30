@@ -13,11 +13,11 @@ const jsonLd = JSON.stringify({
       acceptedAnswer: { '@type': 'Answer', text: i.a },
     })),
   ),
-});
+}).replace(/</g, '\\u003c');
 ---
 <BaseLayout
-  title="Preguntas frecuentes — Forjadores de Leyendas"
-  description="Precios, reservaciones, políticas y todo lo que necesitas saber antes de tu sesión de rol en la posada."
+  title="FAQ: sesiones de D&D y rol en Puebla — Forjadores de Leyendas"
+  description="Precios, reservaciones y políticas de las sesiones de rol y D&D en Puebla. Todo lo que necesitas antes de tu primera aventura."
 >
   <div class="mx-auto max-w-3xl px-4 py-16">
     <h1 class="font-display text-4xl font-bold text-wood">Preguntas frecuentes</h1>

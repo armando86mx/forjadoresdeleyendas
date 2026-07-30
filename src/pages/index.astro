@@ -60,10 +60,12 @@ const hasMenuItem = MENU.map((m) => ({ '@type': 'MenuItem', name: m.nombre, desc
 
 const jsonLd = JSON.stringify({
   '@context': 'https://schema.org',
-  '@type': 'Restaurant',
+  '@type': ['LocalBusiness', 'FoodEstablishment'],
+  additionalType: 'https://schema.org/EntertainmentBusiness',
   name: 'Forjadores de Leyendas',
   description: 'Posada temática con sesiones privadas de Dungeons & Dragons y juegos de rol en Puebla.',
   servesCuisine: 'Comida temática de fantasía',
+  priceRange: '$300–$3,500 MXN',
   url: SITE.url,
   telephone: '+' + SITE.whatsapp,
   address: {
@@ -84,7 +86,7 @@ const jsonLd = JSON.stringify({
       hasMenuItem,
     },
   },
-});
+}).replace(/</g, '\\u003c');
 
 const direccionCompleta = `${SITE.address.street}, ${SITE.address.neighborhood}, ${SITE.address.city}, ${SITE.address.state} ${SITE.address.zip}, México`;
 ---
@@ -92,7 +94,7 @@ const direccionCompleta = `${SITE.address.street}, ${SITE.address.neighborhood},
   <section class="relative flex min-h-[85vh] items-center justify-center overflow-hidden">
     <Image
       src={heroTaberna}
-      alt="Interior cálido de la posada Forjadores de Leyendas, ambientada para una sesión de rol"
+      alt="Interior cálido de la posada Forjadores de Leyendas en el Barrio de Analco, Puebla, ambientada para una sesión de Dungeons & Dragons"
       class="absolute inset-0 -z-20 h-full w-full object-cover"
       widths={[640, 1024, 1600, 1920]}
       sizes="100vw"
@@ -122,6 +124,7 @@ const direccionCompleta = `${SITE.address.street}, ${SITE.address.neighborhood},
   <section class="bg-parchment-light">
     <div class="mx-auto max-w-6xl px-4 py-16">
       <SectionTitle title="¿Nunca has jugado rol? Perfecto: las mejores leyendas empiezan en el nivel 1." />
+      <p class="mx-auto -mt-6 mb-10 max-w-2xl text-center opacity-90">¿Buscas qué hacer en Puebla que no sea lo de siempre? Esto es más que una noche de juegos de mesa: es rol en vivo, con Guardián de Historias y banquete incluido.</p>
       <div class="grid gap-10 lg:grid-cols-2 lg:items-center">
         <Image
           src={novatos}
@@ -173,6 +176,7 @@ const direccionCompleta = `${SITE.address.street}, ${SITE.address.neighborhood},
   <section id="precios" class="bg-parchment-light">
     <div class="mx-auto max-w-6xl px-4 py-16">
       <SectionTitle eyebrow="Precios" title="Elige tu aventura" />
+      <p class="mx-auto -mt-6 mb-8 max-w-2xl text-center text-sm opacity-80">Todas las aventuras incluyen Guardián de Historias, comida y bebida temática, dados, miniaturas y escenografía.</p>
       <div class="grid gap-8 lg:grid-cols-4">
         <div class="rounded-xl border-2 border-fire bg-parchment p-6 shadow-sm lg:col-span-1">
           <h3 class="font-display text-xl font-bold text-wood">{SESION.titulo}</h3>
@@ -203,6 +207,10 @@ const direccionCompleta = `${SITE.address.street}, ${SITE.address.neighborhood},
       <div class="mt-8 flex flex-wrap justify-center gap-4">
         <WhatsAppButton message="Hola, quiero reservar una campaña de rol. ¿Me cuentas los detalles? ⚔️" label="Arma tu campaña" />
         <WhatsAppButton message="Hola, quiero cotizar una sesión especial o team building para mi equipo. 🏰" label="Cotiza tu evento" variant="outline" />
+      </div>
+      <div class="mx-auto mt-12 max-w-2xl rounded-lg bg-parchment-light p-6 text-center shadow-sm">
+        <h3 class="font-display text-xl font-bold text-wood">Para tu equipo de trabajo</h3>
+        <p class="mt-2 opacity-90">¿Buscas un team building en Puebla que la gente sí recuerde? Cambia la sala de juntas por una posada: tu equipo resuelve una aventura juntos, no un curso más.</p>
       </div>
     </div>
   </section>

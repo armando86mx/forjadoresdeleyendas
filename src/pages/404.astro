@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { waLink } from '@/lib/site';
 ---
 <BaseLayout title="Tirada fallida — Forjadores de Leyendas" description="Esta página no existe. Vuelve a la posada.">
   <div class="mx-auto max-w-xl px-4 py-24 text-center">
@@ -7,5 +8,6 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     <h1 class="mt-4 font-display text-3xl font-bold text-wood">Tirada fallida: crítico en contra</h1>
     <p class="mt-3 opacity-80">La página que buscas no existe en este plano de la realidad. Quizá un mago la desvaneció, o quizá el enlace estaba maldito.</p>
     <a href="/" class="mt-8 inline-block rounded-lg bg-fire px-6 py-3 font-display font-bold text-parchment-light transition-colors hover:bg-amber hover:text-ink">Volver a la posada</a>
+    <a href={waLink('Hola, me perdí en el sitio y quiero información. 🧭')} target="_blank" rel="noopener" class="mt-4 block text-sm text-fire hover:underline">o escríbele al posadero por WhatsApp</a>
   </div>
 </BaseLayout>

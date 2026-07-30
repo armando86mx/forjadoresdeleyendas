@@ -35,6 +35,7 @@ export const FAQ = [
       { q: '¿Cuáles son los canales de comunicación?', a: 'WhatsApp y nuestras redes sociales (Instagram, X, YouTube, TikTok y Twitch). Respondemos lo más rápido posible.' },
       { q: '¿Tienen eventos especiales?', a: 'Sí: noches temáticas, sesiones especiales y colaboraciones con creadores geek. Anunciamos todo en redes y en nuestras Crónicas.' },
       { q: '¿Tienen programa de referidos?', a: 'Estamos forjando uno: si traes a un amigo, ambos obtendrán 10% de descuento en su próxima sesión. Pregunta por WhatsApp si ya está activo.' },
+      { q: '¿Organizan team building para empresas?', a: 'Sí. Armamos sesiones de rol pensadas para equipos de trabajo, con dinámicas de aventura que sueltan a cualquier grupo y comida incluida. Cotiza tu evento por WhatsApp y arma la campaña de tu empresa.' },
     ],
   },
 ];

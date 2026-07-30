@@ -17,4 +17,6 @@ Cada grupo vive su propia crónica: unos rescatan un pueblo de una maldición, o
 
 Las reservas se hacen por WhatsApp, y los lugares en cada mesa son limitados, así que si ya sientes el llamado de la aventura, no lo dejes para después. La posada tiene las puertas abiertas y una silla con tu nombre.
 
+Echa un ojo a los [paquetes y precios](/#precios) para armar tu primera aventura.
+
 [Reserva tu lugar en la posada](https://wa.me/522221890232?text=%C2%A1Saludos%2C%20Guardi%C3%A1n!%20Quiero%20reservar%20una%20sesi%C3%B3n%20de%20rol%20en%20la%20posada.%20%F0%9F%8E%B2)

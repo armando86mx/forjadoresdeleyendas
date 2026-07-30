@@ -2,7 +2,7 @@ export const SITE = {
   name: 'Forjadores de Leyendas',
   url: 'https://forjadoresdeleyendas.mx',
   description:
-    'Posada temática en Puebla con sesiones privadas de Dungeons & Dragons y juegos de rol, guiadas por Guardianes de Historias, con comida temática y escenografía inmersiva.',
+    'Posada temática en Puebla para jugar Dungeons & Dragons y rol en vivo: Guardián de Historias, comida temática y escenografía inmersiva.',
   phone: '+52 222 189 0232',
   whatsapp: '522221890232',
   address: {

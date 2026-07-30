@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import WhatsAppButton from '@/components/WhatsAppButton.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -13,5 +14,8 @@ const { Content } = await render(post);
   <article class="mx-auto max-w-3xl px-4 py-16">
     <h1 class="font-display text-wood">{post.data.title}</h1>
     <Content />
+    <div class="mt-12 text-center not-prose">
+      <WhatsAppButton message="¡Saludos, Guardián! Leí una crónica y quiero reservar una sesión. 🎲" label="Reserva tu aventura" />
+    </div>
   </article>
 </BaseLayout>
