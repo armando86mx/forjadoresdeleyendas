@@ -19,3 +19,19 @@ html {
 body {
   @apply bg-parchment text-ink font-body antialiased;
 }
+
+article h1 {
+  @apply text-4xl font-bold;
+}
+
+article h2 {
+  @apply font-display text-2xl text-wood mt-8;
+}
+
+article p {
+  @apply mt-4 leading-relaxed;
+}
+
+article a {
+  @apply text-fire underline underline-offset-2 hover:text-amber;
+}

@@ -1,0 +1,29 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('cronicas')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+const labels = { cronicas: 'Crónica', aliados: 'Aliados' };
+---
+<BaseLayout
+  title="Crónicas de la Posada — Forjadores de Leyendas"
+  description="Historias, sesiones y aventuras registradas por el posadero: crónicas de la comunidad rolera y de nuestros aliados en todo el país."
+>
+  <div class="mx-auto max-w-3xl px-4 py-16">
+    <h1 class="font-display text-4xl font-bold text-wood">Crónicas de la Posada</h1>
+    <p class="mt-2 opacity-80">Aquí el posadero registra las gestas que nacen en estas mesas.</p>
+    <div class="mt-10 space-y-6">
+      {posts.map((post) => (
+        <a href={`/cronicas/${post.id}/`} class="block rounded-lg bg-parchment-light p-6 shadow-sm transition-shadow hover:shadow-md">
+          <p class="text-xs font-bold uppercase tracking-widest text-fire">{labels[post.data.categoria]}</p>
+          <h2 class="mt-1 font-display text-2xl text-wood">{post.data.title}</h2>
+          <p class="mt-2 text-sm opacity-80">{post.data.description}</p>
+          <time class="mt-2 block text-xs opacity-60" datetime={post.data.pubDate.toISOString()}>
+            {post.data.pubDate.toLocaleDateString('es-MX', { dateStyle: 'long' })}
+          </time>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>
