@@ -49,6 +49,16 @@
   article a {
     @apply text-fire underline underline-offset-2 hover:text-amber;
   }
+
+  [id] {
+    scroll-margin-top: 5.5rem;
+  }
+
+  @media (max-width: 639px) {
+    [id] {
+      scroll-margin-top: 10.5rem;
+    }
+  }
 }
 
 @layer components {

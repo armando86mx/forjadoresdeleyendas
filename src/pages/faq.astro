@@ -35,19 +35,22 @@ const jsonLd = JSON.stringify({
       </div>
     </section>
 
-    {FAQ.map((cat) => (
-      <section class="mt-10">
-        <h2 class="font-display text-2xl text-fire">{cat.categoria}</h2>
-        <div class="mt-4 space-y-3">
-          {cat.items.map((item) => (
-            <details class="card rounded-lg bg-parchment-light">
-              <summary class="flex min-h-11 cursor-pointer items-center rounded-lg p-4 font-bold transition-colors duration-200 hover:text-fire focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber">{item.q}</summary>
-              <p class="max-w-prose px-4 pb-4 opacity-90">{item.a}</p>
-            </details>
-          ))}
-        </div>
-      </section>
-    ))}
+    {FAQ.map((cat) => {
+      const items = cat.items.filter((i) => !('destacada' in i && i.destacada));
+      return (
+        <section class="mt-10">
+          <h2 class="font-display text-2xl text-fire">{cat.categoria}</h2>
+          <div class="mt-4 space-y-3">
+            {items.map((item) => (
+              <details class="card rounded-lg bg-parchment-light">
+                <summary class="flex min-h-11 cursor-pointer items-center rounded-lg p-4 font-bold transition-colors duration-200 hover:text-fire focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber">{item.q}</summary>
+                <p class="max-w-prose px-4 pb-4 opacity-90">{item.a}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+      );
+    })}
     <div class="mt-12 text-center">
       <p class="mb-4 font-display text-xl">¿Te quedó alguna duda?</p>
       <WhatsAppButton message="Hola, tengo una pregunta sobre las sesiones de rol. 🤔" label="Pregúntale al posadero" />

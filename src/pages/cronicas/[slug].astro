@@ -9,8 +9,20 @@ export async function getStaticPaths() {
 }
 const { post } = Astro.props;
 const { Content } = await render(post);
+
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.pubDate.toISOString(),
+  inLanguage: 'es-MX',
+  author: { '@type': 'Organization', name: 'Forjadores de Leyendas' },
+  publisher: { '@type': 'Organization', name: 'Forjadores de Leyendas', url: 'https://forjadoresdeleyendas.mx' },
+  mainEntityOfPage: new URL(Astro.url.pathname, 'https://forjadoresdeleyendas.mx').href,
+}).replace(/</g, '\\u003c');
 ---
-<BaseLayout title={`${post.data.title} — Crónicas de la Posada`} description={post.data.description}>
+<BaseLayout title={post.data.title} description={post.data.description} type="article">
   <article class="mx-auto max-w-[70ch] px-4 py-16">
     <h1 class="font-display text-wood">{post.data.title}</h1>
     <Content />
@@ -18,4 +30,5 @@ const { Content } = await render(post);
       <WhatsAppButton message="¡Saludos, Guardián! Leí una crónica y quiero reservar una sesión. 🎲" label="Reserva tu aventura" />
     </div>
   </article>
+  <script type="application/ld+json" set:html={jsonLd} is:inline />
 </BaseLayout>

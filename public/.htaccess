@@ -1,3 +1,7 @@
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^www\.forjadoresdeleyendas\.mx$ [NC]
+RewriteRule ^(.*)$ https://forjadoresdeleyendas.mx/$1 [L,R=301]
+
 ErrorDocument 404 /404.html
 
 # Nunca servir metadatos de git ni dotfiles del deploy

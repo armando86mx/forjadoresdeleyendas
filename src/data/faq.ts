@@ -9,14 +9,19 @@ export const FAQ = [
     ],
   },
   {
-    categoria: 'Reservaciones y pagos',
+    categoria: 'Reservar y pagar',
     items: [
       { q: '¿Cómo puedo reservar una sesión?', a: 'Escríbenos por WhatsApp o por cualquiera de nuestras redes sociales y un Guardián te ayudará a elegir fecha y aventura.' },
       { q: '¿Con cuánto tiempo debo reservar?', a: 'Con al menos 48 horas de anticipación: preparamos los alimentos con productos frescos y diseñamos el one-shot para tu grupo.' },
       { q: '¿Qué métodos de pago aceptan?', a: 'Efectivo, tarjetas de crédito o débito, transferencias bancarias y PayPal.' },
+      { q: '¿Tienen descuentos o membresías?', a: 'Por ahora no manejamos membresías, pero lanzamos promociones por temporada. Síguenos en redes para enterarte primero.' },
+    ],
+  },
+  {
+    categoria: 'Cambios y cancelaciones',
+    items: [
       { q: '¿Puedo cambiar la fecha de mi sesión?', a: 'Sí, sin penalización si nos avisas con al menos 72 horas de anticipación.' },
       { q: '¿Cuál es la política de cancelaciones?', a: 'Cancelando con 72 horas de anticipación no hay penalización. Con menos de 72 horas, la penalización es de $250 MXN por persona.' },
-      { q: '¿Tienen descuentos o membresías?', a: 'Por ahora no manejamos membresías, pero lanzamos promociones por temporada. Síguenos en redes para enterarte primero.' },
       { q: '¿Puedo reservar solo la sesión sin comida?', a: 'Sí. Déjanos tus datos y un Guardián de Historias de mayor rango coordinará los detalles contigo.' },
       { q: '¿Puedo reservar solo el espacio sin una sesión?', a: 'Sí, coordinándolo con un Guardián de Historias de mayor rango. Escríbenos y lo armamos.' },
     ],

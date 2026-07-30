@@ -4,6 +4,8 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   site: 'https://forjadoresdeleyendas.mx',
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({ serialize: (item) => ({ ...item, lastmod: new Date().toISOString() }) }),
+  ],
   vite: { plugins: [tailwindcss()] },
 });
