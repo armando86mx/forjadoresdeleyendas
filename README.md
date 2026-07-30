@@ -38,7 +38,7 @@ Contenido de la crónica en Markdown...
 - `pubDate` (YYYY-MM-DD): Fecha de publicación
 - `categoria` ("cronicas" | "aliados"): Categoría de contenido
 
-Luego haz push a `main`. La rama `main` es la fuente del sitio; un GitHub Action (Task 8) compilará y desplegará a la rama `hostinger-deploy` (que sirve como `public_html` en Hostinger).
+Luego haz push a `main`. La rama `main` es la fuente del sitio; un GitHub Action compilará y desplegará a la rama `hostinger-deploy` (que sirve como `public_html` en Hostinger).
 
 ## Pendientes de configuración
 
@@ -57,7 +57,7 @@ Luego haz push a `main`. La rama `main` es la fuente del sitio; un GitHub Action
 - `src/pages/` — Rutas estáticas (index, 404, etc.)
 - `src/content/cronicas/` — Entradas de blog (colección de contenido)
 - `src/layouts/` — Layouts reutilizables (BaseLayout)
-- `src/components/` — Componentes de Astro + Web Components
+- `src/components/` — Componentes de Astro
 - `public/` — Archivos estáticos (robots.txt, sitemap, etc.)
 - `dist/` — Build generado por `npm run build`
 
@@ -65,5 +65,5 @@ Luego haz push a `main`. La rama `main` es la fuente del sitio; un GitHub Action
 
 - **Repo:** https://github.com/armando86mx/forjadoresdeleyendas
 - **Rama fuente:** `main`
-- **Rama de producción:** `hostinger-deploy` (la actualizará automáticamente un GitHub Action tras cada push a `main`; pendiente de configurar — ver tabla de pendientes)
+- **Rama de producción:** `hostinger-deploy` (el GitHub Action ya la publica automáticamente tras cada push a `main`; solo falta configurar en Hostinger que jale de esa rama — ver tabla de pendientes)
 - **Analytics:** Variables de entorno `PUBLIC_GA4_ID`, `PUBLIC_CLARITY_ID`
