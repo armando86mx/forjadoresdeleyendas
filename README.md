@@ -44,8 +44,8 @@ Luego haz push a `main`. La rama `main` es la fuente del sitio; un GitHub Action
 
 | Pendiente | Cómo se resuelve |
 |---|---|
-| ID de Google Analytics 4 | Crear propiedad en analytics.google.com → poner `PUBLIC_GA4_ID=G-XXXX` en `.env` y en los secrets del repo |
-| ID de Microsoft Clarity | clarity.microsoft.com → nuevo proyecto → `PUBLIC_CLARITY_ID=xxxx` |
+| ID de Google Analytics 4 | Crear propiedad en analytics.google.com → poner `PUBLIC_GA4_ID=G-XXXX` en `.env` para builds locales y en **Variables** del repo (Settings → Secrets and variables → Actions → pestaña Variables) para producción, ya que el workflow lee `vars.PUBLIC_GA4_ID` |
+| ID de Microsoft Clarity | clarity.microsoft.com → nuevo proyecto → poner `PUBLIC_CLARITY_ID=xxxx` en `.env` para builds locales y en **Variables** del repo (Settings → Secrets and variables → Actions → pestaña Variables) para producción, ya que el workflow lee `vars.PUBLIC_CLARITY_ID` |
 | Verificación Bing Webmaster | bing.com/webmasters → importar desde Google Search Console o agregar meta tag en `BaseLayout.astro` |
 | IndexNow | Key ya generada: `5421e1be952874a0c0c5c3bdf60bc77d` (archivo en `public/`). Tras publicar contenido: `curl "https://api.indexnow.org/indexnow?url=https://forjadoresdeleyendas.mx&key=5421e1be952874a0c0c5c3bdf60bc77d"` |
 | Rama de deploy en Hostinger | Confirmar que Hostinger jala la rama `hostinger-deploy` (carpeta raíz = `public_html`) |
