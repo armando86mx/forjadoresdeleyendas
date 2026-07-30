@@ -1,0 +1,21 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-parchment: #f3e3cb;
+  --color-parchment-light: #faf3e3;
+  --color-wood: #5c4020;
+  --color-ink: #2b1f14;
+  --color-amber: #e8a33d;
+  --color-fire: #c4622d;
+  --color-shield: #6b7a54;
+  --font-display: 'Cinzel', serif;
+  --font-body: 'Inter Variable', sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-parchment text-ink font-body antialiased;
+}
