@@ -29,7 +29,7 @@ Así, entre narración y decisión, va avanzando la historia hasta el final de l
 
 **"Necesito estudiar las reglas antes de ir."** Falso. Nadie te va a pedir que memorices nada. Llegas, te explicamos lo esencial en la mesa, y jugamos.
 
-**"Es solo para expertos que llevan años jugando."** Nuestras sesiones están diseñadas justamente para grupos con novatos. De hecho, la mayoría de las aventuras que nacen aquí empiezan con alguien que nunca había tirado un dado de veinte caras.
+**"Es solo para expertos que llevan años jugando."** Nuestras sesiones están diseñadas justamente para grupos con novatos. Y si nunca has tirado un dado de veinte caras, mejor aún: esta posada está pensada para que tu primera aventura sea inolvidable.
 
 ## ¿Qué tengo que llevar?
 
