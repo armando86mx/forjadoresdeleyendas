@@ -1,0 +1,32 @@
+---
+import { SITE, waLink } from '@/lib/site';
+const socials = [
+  ['Instagram', SITE.social.instagram],
+  ['YouTube', SITE.social.youtube],
+  ['X', SITE.social.x],
+  ['TikTok', SITE.social.tiktok],
+  ['Twitch', SITE.social.twitch],
+];
+---
+<footer class="bg-ink text-parchment-light">
+  <div class="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:grid-cols-3">
+    <div>
+      <h2 class="font-display text-xl text-amber">Forjadores de Leyendas</h2>
+      <p class="mt-2 text-sm opacity-80">Tu aventura comienza aquí… ¿Estás listo para lanzar el dado?</p>
+    </div>
+    <div>
+      <h3 class="font-display text-amber">La Posada</h3>
+      <p class="mt-2 text-sm">{SITE.address.street}, {SITE.address.neighborhood}<br />{SITE.address.city}, {SITE.address.state}</p>
+      <a href={waLink('Hola, quiero información sobre Forjadores de Leyendas.')} class="mt-2 inline-block text-sm text-amber hover:underline">WhatsApp: {SITE.phone}</a>
+    </div>
+    <div>
+      <h3 class="font-display text-amber">Síguenos</h3>
+      <ul class="mt-2 space-y-1 text-sm">
+        {socials.map(([name, url]) => (
+          <li><a href={url} target="_blank" rel="noopener" class="hover:text-amber">{name}</a></li>
+        ))}
+      </ul>
+    </div>
+  </div>
+  <p class="border-t border-wood py-4 text-center text-xs opacity-60">© {new Date().getFullYear()} Forjadores de Leyendas · Puebla, México</p>
+</footer>

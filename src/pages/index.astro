@@ -1,5 +1,7 @@
 ---
-import '@/styles/global.css';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { SITE } from '@/lib/site';
 ---
-<html lang="es-MX"><head><title>Forjadores de Leyendas</title></head>
-<body><h1>En construcción</h1></body></html>
+<BaseLayout title="Forjadores de Leyendas" description={SITE.description}>
+  <h1>En construcción</h1>
+</BaseLayout>

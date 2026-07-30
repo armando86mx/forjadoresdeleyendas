@@ -1,0 +1,26 @@
+---
+import { Image } from 'astro:assets';
+import escudo from '@/assets/img/escudo.png';
+const nav = [
+  { href: '/', label: 'Inicio' },
+  { href: '/#banquete', label: 'El Banquete' },
+  { href: '/#precios', label: 'Precios' },
+  { href: '/faq', label: 'FAQ' },
+  { href: '/cronicas', label: 'Crónicas' },
+];
+---
+<header class="sticky top-0 z-50 bg-ink/95 text-parchment-light backdrop-blur">
+  <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+    <a href="/" class="flex items-center gap-3">
+      <Image src={escudo} alt="Escudo de Forjadores de Leyendas" width={48} loading="eager" />
+      <span class="font-display text-lg font-bold tracking-wide">Forjadores de Leyendas</span>
+    </a>
+    <nav aria-label="Principal">
+      <ul class="flex gap-5 text-sm">
+        {nav.map((item) => (
+          <li><a href={item.href} class="hover:text-amber transition-colors">{item.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>

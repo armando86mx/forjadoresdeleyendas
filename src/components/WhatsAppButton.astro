@@ -1,0 +1,21 @@
+---
+import { waLink } from '@/lib/site';
+interface Props {
+  message: string;
+  label: string;
+  variant?: 'primary' | 'outline';
+}
+const { message, label, variant = 'primary' } = Astro.props;
+const styles =
+  variant === 'primary'
+    ? 'bg-fire text-parchment-light hover:bg-amber hover:text-ink'
+    : 'border-2 border-fire text-fire hover:bg-fire hover:text-parchment-light';
+---
+<a
+  href={waLink(message)}
+  target="_blank"
+  rel="noopener"
+  class={`inline-block rounded-lg px-6 py-3 font-display font-bold tracking-wide transition-colors ${styles}`}
+>
+  {label}
+</a>
