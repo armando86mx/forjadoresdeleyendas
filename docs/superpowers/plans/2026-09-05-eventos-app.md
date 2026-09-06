@@ -746,7 +746,7 @@ function doPost(e) {
   }
   var personas = datos.personas || [];
   try {
-    var evento = leerTabla(HOJAS.eventos).filter(function (ev) { return String(ev.id) === String(datos.eventoId); })[0];
+    var evento = leerEventos_().filter(function (ev) { return String(ev.id) === String(datos.eventoId); })[0];
     var registrosDelEvento = leerTabla(HOJAS.registros).filter(function (r) { return String(r.eventoId) === String(datos.eventoId); });
     var error = validarRegistro(personas, evento, registrosDelEvento, ahoraIso_());
     if (error) {
