@@ -69,3 +69,14 @@ function panelBorrar(tabla, id) {
   }
   regenerarVista();
 }
+
+function panelGuardarFoto(base64, nombreArchivo) {
+  exigirAdmin_();
+  var carpetas = DriveApp.getFoldersByName(CONFIG.carpetaFotos);
+  var carpeta = carpetas.hasNext() ? carpetas.next() : DriveApp.createFolder(CONFIG.carpetaFotos);
+  var blob = Utilities.newBlob(Utilities.base64Decode(base64), 'image/jpeg', nombreArchivo);
+  var archivo = carpeta.createFile(blob);
+  archivo.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  // Truco tolerado, no CDN formal (spec §7): si el tráfico crece, migrar estas fotos.
+  return 'https://lh3.googleusercontent.com/d/' + archivo.getId();
+}

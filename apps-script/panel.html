@@ -29,6 +29,7 @@
   <select name="guildmasterId" id="sel-gm" required></select>
   <input name="fecha" type="date" required>
   <input name="hora" type="time" required>
+  <input type="file" id="foto" accept="image/*">
   <button>Crear evento</button>
 </form>
 <ul id="l-eventos"></ul>
@@ -139,6 +140,8 @@ function editarEvento(id) {
 document.getElementById('f-evento').onsubmit = async (ev) => {
   ev.preventDefault();
   const datos = Object.fromEntries(new FormData(ev.target));
+  const fotoUrl = await subirFotoSiHay();
+  if (fotoUrl) datos.fotoUrl = fotoUrl; // sin foto nueva, panelEditar conserva la existente
   if (editandoEventoId) {
     await llamar('panelEditar', 'eventos', editandoEventoId, datos);
   } else {
@@ -150,6 +153,20 @@ document.getElementById('f-evento').onsubmit = async (ev) => {
 };
 
 recargar();
+
+async function subirFotoSiHay() {
+  const archivo = document.getElementById('foto').files[0];
+  if (!archivo) return '';
+  avisar('Subiendo foto…');
+  const img = await createImageBitmap(archivo);
+  const escala = Math.min(1, 1200 / img.width); // ancho máx 1200px ≈ 150-250 KB en JPEG 0.8
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.round(img.width * escala);
+  canvas.height = Math.round(img.height * escala);
+  canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+  const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+  return llamar('panelGuardarFoto', dataUrl.split(',')[1], archivo.name.replace(/\.\w+$/, '') + '.jpg');
+}
 </script>
 </body>
 </html>
