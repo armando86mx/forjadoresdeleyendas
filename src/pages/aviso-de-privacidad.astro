@@ -1,0 +1,43 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionTitle from '@/components/SectionTitle.astro';
+import { SITE } from '@/lib/site';
+---
+<BaseLayout
+  title="Aviso de privacidad — Forjadores de Leyendas"
+  description="Cómo usamos y protegemos los datos que nos compartes al registrarte a un evento de Forjadores de Leyendas."
+>
+  <section class="bg-parchment-light">
+    <div class="mx-auto max-w-3xl px-4 py-16">
+      <SectionTitle title="Aviso de privacidad" />
+      <div class="space-y-5 opacity-90">
+        <p>
+          <strong>Forjadores de Leyendas</strong>, con domicilio en {SITE.address.street},
+          {SITE.address.neighborhood}, {SITE.address.city}, {SITE.address.state}, es responsable
+          del tratamiento de los datos personales que nos compartes, conforme a la Ley Federal de
+          Protección de Datos Personales en Posesión de los Particulares.
+        </p>
+        <p>
+          <strong>Datos que recabamos:</strong> al registrarte a un evento te pedimos nombre,
+          teléfono y correo electrónico de cada participante.
+        </p>
+        <p>
+          <strong>Para qué los usamos:</strong> únicamente para gestionar tu registro, confirmarte
+          los detalles del evento y contactarte si hay algún cambio. No los usamos para publicidad
+          ni los compartimos con terceros.
+        </p>
+        <p>
+          <strong>Dónde se guardan:</strong> en una hoja de cálculo privada de Google a la que solo
+          accede el equipo organizador.
+        </p>
+        <p>
+          <strong>Tus derechos:</strong> puedes pedir en cualquier momento el acceso, corrección o
+          eliminación de tus datos (derechos ARCO) escribiéndonos por
+          <a href={`https://wa.me/${SITE.whatsapp}`} target="_blank" rel="noopener" class="underline">WhatsApp</a>
+          al {SITE.phone}.
+        </p>
+        <p class="text-sm opacity-70">Última actualización: septiembre de 2026.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
