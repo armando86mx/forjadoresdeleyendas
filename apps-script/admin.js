@@ -30,7 +30,15 @@ function panelCrear(tabla, obj) {
   var fila = { id: nuevoId_() };
   var enc = ENCABEZADOS[nombre];
   enc.forEach(function (col) { if (obj[col] !== undefined) fila[col] = String(obj[col]).trim(); });
-  if (tabla === 'eventos') fila.cupo = CONFIG.cupoPorEvento;
+  if (tabla === 'eventos') {
+    fila.cupo = CONFIG.cupoPorEvento;
+    // Un evento idéntico solo puede ser un accidente (doble clic, semilla repetida).
+    var duplicado = leerEventos_().some(function (ev) {
+      return ev.nombre === fila.nombre && String(ev.sedeId) === String(fila.sedeId) &&
+        ev.fecha === fila.fecha && ev.hora === fila.hora;
+    });
+    if (duplicado) throw new Error('Ya existe un evento con ese nombre, sede, fecha y hora.');
+  }
   agregarFila(nombre, fila);
   regenerarVista();
   return fila.id;
