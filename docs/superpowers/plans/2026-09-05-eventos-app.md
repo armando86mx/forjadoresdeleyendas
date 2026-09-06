@@ -582,6 +582,9 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 function regenerarVista() {
   var ss = SpreadsheetApp.getActive();
   var h = ss.getSheetByName(HOJAS.vista) || ss.insertSheet(HOJAS.vista, 0);
+  // breakApart antes de clear: clear() NO deshace celdas combinadas, y los merges
+  // huérfanos de regeneraciones anteriores desalinearían filas futuras.
+  h.getRange(1, 1, h.getMaxRows(), h.getMaxColumns()).breakApart();
   h.clear();
   var registros = leerTabla(HOJAS.registros);
   var fila = 1;
