@@ -15,3 +15,10 @@ function sembrarDatosDePrueba() {
     fecha: fecha, hora: '16:00', sedeId: sedeId, guildmasterId: gmId, fotoUrl: '', cupo: CONFIG.cupoPorEvento,
   });
 }
+
+function probarCorreo() {
+  var evento = leerTabla(HOJAS.eventos)[0];
+  enviarConfirmaciones_(evento.id, [
+    { nombre: 'Prueba', correo: Session.getActiveUser().getEmail(), telefono: '2220000000' },
+  ]);
+}
