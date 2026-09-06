@@ -121,11 +121,17 @@ function verificarRecaptcha_(token) {
   // configura el secreto real; en producción SIEMPRE debe estar presente.
   if (!secreto) return true;
   if (!token) return false;
-  var resp = UrlFetchApp.fetch('https://www.google.com/recaptcha/api/siteverify', {
-    method: 'post',
-    payload: { secret: secreto, response: token },
-    muteHttpExceptions: true,
-  });
-  var r = JSON.parse(resp.getContentText());
-  return !!r.success && (r.score === undefined || r.score >= CONFIG.recaptchaMinScore);
+  try {
+    var resp = UrlFetchApp.fetch('https://www.google.com/recaptcha/api/siteverify', {
+      method: 'post',
+      payload: { secret: secreto, response: token },
+      muteHttpExceptions: true,
+    });
+    var r = JSON.parse(resp.getContentText());
+    return !!r.success && (r.score === undefined || r.score >= CONFIG.recaptchaMinScore);
+  } catch (err) {
+    // Falla de red hacia siteverify: doPost debe responder JSON bien formado, no una página de error.
+    console.error('Verificación reCAPTCHA falló: ' + err);
+    return false;
+  }
 }
