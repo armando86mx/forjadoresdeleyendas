@@ -345,7 +345,7 @@ test('registro válido devuelve null', () => {
 - [ ] **Step 2: Correr los tests y verificar que fallan**
 
 ```bash
-node --test apps-script/tests/
+node --test apps-script/tests/*.test.js
 ```
 
 Expected: FAIL — `Cannot find module '../logic.js'`.
@@ -429,7 +429,7 @@ if (typeof module !== 'undefined') {
 - [ ] **Step 4: Correr los tests y verificar que pasan**
 
 ```bash
-node --test apps-script/tests/
+node --test apps-script/tests/*.test.js
 ```
 
 Expected: `pass 12`, `fail 0`.
@@ -1609,7 +1609,7 @@ Desde el panel admin: borrar los registros de prueba ("Ana Prueba", etc.) y, si 
 - [ ] **Step 2: Corrida completa de checks**
 
 ```bash
-node --test apps-script/tests/ && npm run build
+node --test apps-script/tests/*.test.js && npm run build
 ```
 
 Expected: tests en verde y build sin errores.
