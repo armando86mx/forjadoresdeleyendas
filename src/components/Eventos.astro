@@ -1,0 +1,89 @@
+---
+import SectionTitle from '@/components/SectionTitle.astro';
+---
+<section id="eventos" class="scroll-mt-24 bg-parchment-light">
+  <div class="mx-auto max-w-6xl px-4 py-16">
+    <SectionTitle eyebrow="Eventos del mes" title="Únete a una mesa abierta" />
+    <p class="mx-auto -mt-6 mb-10 max-w-prose text-center opacity-90">
+      Partidas abiertas de rol en distintas sedes. Aparta tu lugar y llega a jugar: el Guildmaster se encarga del resto.
+    </p>
+    <div id="eventos-contenido" aria-live="polite">
+      <p class="text-center opacity-70">Consultando el tablón de eventos…</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { EVENTOS_API } from '@/lib/eventos-config';
+
+  const cont = document.getElementById('eventos-contenido')!;
+  const esc = (s: unknown) =>
+    String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
+
+  function fechaBonita(iso: string): string {
+    const [a, m, d] = iso.split('-').map(Number);
+    return new Date(a, m - 1, d).toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' });
+  }
+  function horaBonita(hhmm: string): string {
+    const [h, m] = hhmm.split(':').map(Number);
+    return `${h % 12 || 12}:${String(m).padStart(2, '0')} ${h < 12 ? 'a. m.' : 'p. m.'}`;
+  }
+
+  function tarjeta(ev: any): string {
+    const foto = ev.fotoUrl
+      ? `<img src="${esc(ev.fotoUrl)}" alt="" loading="lazy" class="h-44 w-full object-cover">`
+      : `<div class="flex h-44 w-full items-center justify-center bg-parchment-deep font-display text-5xl" aria-hidden="true">🎲</div>`;
+    const accion = ev.concluido
+      ? `<p class="mt-4 rounded-lg bg-parchment-deep px-4 py-3 text-center font-display font-bold opacity-70">Evento concluido</p>`
+      : ev.lugaresDisponibles === 0
+        ? `<p class="mt-4 rounded-lg bg-parchment-deep px-4 py-3 text-center font-display font-bold text-fire">Cupo completo</p>`
+        : `<button type="button" data-id="${esc(ev.id)}" class="btn-registrar mt-4 w-full rounded-lg bg-fire px-6 py-3 font-display font-bold tracking-wide text-parchment-light transition-colors duration-200 hover:bg-amber hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2">Registrarse</button>`;
+    const cupos = ev.concluido ? '' :
+      `<p class="mt-3 text-sm font-bold ${ev.lugaresDisponibles === 0 ? 'text-fire' : 'text-wood'}">` +
+      (ev.lugaresDisponibles === 0 ? 'Sin lugares disponibles' : `Quedan ${ev.lugaresDisponibles} de 6 lugares`) + '</p>';
+    return `
+      <article class="card flex flex-col overflow-hidden rounded-xl bg-parchment">
+        ${foto}
+        <div class="flex grow flex-col p-5">
+          <h4 class="font-display text-lg font-bold text-wood">${esc(ev.nombre)}</h4>
+          <p class="mt-1 text-sm font-bold capitalize">${esc(fechaBonita(ev.fecha))} · ${esc(horaBonita(ev.hora))}</p>
+          <p class="mt-2 text-sm opacity-90">${esc(ev.descripcion)}</p>
+          <p class="mt-3 text-sm">Guildmaster: <strong>${esc(ev.guildmaster)}</strong></p>
+          <p class="text-sm">${esc(ev.sede.nombre)} — <a href="${esc(ev.sede.mapsUrl)}" target="_blank" rel="noopener" class="underline">cómo llegar</a></p>
+          <div class="grow"></div>
+          ${cupos}
+          ${accion}
+        </div>
+      </article>`;
+  }
+
+  function pintar(eventos: any[]): void {
+    if (eventos.length === 0) {
+      cont.innerHTML = `<p class="text-center opacity-80">El posadero está preparando los eventos del mes. Vuelve pronto — o pregúntanos por <a class="underline" href="https://wa.me/522221890232" target="_blank" rel="noopener">WhatsApp</a>.</p>`;
+      return;
+    }
+    const ciudades = [...new Set(eventos.map((ev) => ev.ciudad))];
+    cont.innerHTML = ciudades.map((ciudad) => `
+      <div class="mt-10 first:mt-0">
+        <h3 class="ornament mb-6 text-center font-display text-2xl font-bold text-wood">${esc(ciudad)}</h3>
+        <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          ${eventos.filter((ev) => ev.ciudad === ciudad).map(tarjeta).join('')}
+        </div>
+      </div>`).join('');
+  }
+
+  async function cargar(): Promise<void> {
+    try {
+      const resp = await fetch(`${EVENTOS_API}?t=${Date.now()}`);
+      const datos = await resp.json();
+      if (!datos.ok) throw new Error('respuesta no ok');
+      pintar(datos.eventos);
+      document.dispatchEvent(new CustomEvent('eventos:pintados', { detail: datos.eventos }));
+    } catch {
+      cont.innerHTML = `<p class="text-center opacity-80">El tablón no responde por ahora. Escríbenos por <a class="underline" href="https://wa.me/522221890232" target="_blank" rel="noopener">WhatsApp</a> y te apartamos tu lugar.</p>`;
+    }
+  }
+
+  (window as any).__recargarEventos = cargar;
+  cargar();
+</script>

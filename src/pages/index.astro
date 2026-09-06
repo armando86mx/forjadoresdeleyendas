@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import WhatsAppButton from '@/components/WhatsAppButton.astro';
 import SectionTitle from '@/components/SectionTitle.astro';
+import Eventos from '@/components/Eventos.astro';
 import { SITE } from '@/lib/site';
 import { SESION, CAMPANAS } from '@/data/precios';
 import { MENU, CATEGORIAS } from '@/data/menu';
@@ -98,7 +99,12 @@ const direccionCompleta = `${SITE.address.street}, ${SITE.address.neighborhood},
         Sesiones privadas de Dungeons &amp; Dragons y juegos de rol en una posada temática en el corazón de Puebla, guiadas por un Guardián de Historias que hará tu aventura inolvidable.
       </p>
       <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
-        <WhatsAppButton message="¡Saludos, Guardián! Quiero reservar una sesión de rol en la posada. 🎲" label="Reserva tu aventura" />
+        <a
+          href="#eventos"
+          class="inline-block rounded-lg bg-fire px-6 py-3 font-display font-bold tracking-wide text-parchment-light no-underline transition-[color,background-color,border-color,box-shadow,transform] duration-200 ease-out hover:bg-amber hover:text-ink hover:shadow-md active:translate-y-px active:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2"
+        >
+          Reserva tu aventura
+        </a>
       </div>
     </div>
   </section>
@@ -154,6 +160,8 @@ const direccionCompleta = `${SITE.address.street}, ${SITE.address.neighborhood},
       </div>
     </div>
   </section>
+
+  <Eventos />
 
   {MOSTRAR_PRECIOS && (
   <section id="precios" class="bg-parchment-light">
@@ -267,9 +275,6 @@ const direccionCompleta = `${SITE.address.street}, ${SITE.address.neighborhood},
               <span>Mesas y horarios coordinados a la medida de tu equipo.</span>
             </li>
           </ul>
-          <div class="mt-8">
-            <WhatsAppButton message="Hola, quiero cotizar una sesión especial o team building para mi equipo. 🏰" label="Cotiza tu evento" />
-          </div>
         </div>
       </div>
     </div>
