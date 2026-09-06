@@ -5,7 +5,11 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://forjadoresdeleyendas.mx',
   integrations: [
-    sitemap({ serialize: (item) => ({ ...item, lastmod: new Date().toISOString() }) }),
+    sitemap({
+      // /faq está fuera del índice mientras los servicios de precios y comida están en pausa.
+      filter: (page) => !page.includes('/faq'),
+      serialize: (item) => ({ ...item, lastmod: new Date().toISOString() }),
+    }),
   ],
   vite: { plugins: [tailwindcss()] },
 });

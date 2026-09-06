@@ -14,6 +14,13 @@ import banquete from '@/assets/img/banquete.jpg';
 import escenografia from '@/assets/img/escenografia.jpg';
 import novatos from '@/assets/img/novatos.jpg';
 
+// Servicios en pausa (2026-11): la posada no está ofreciendo alimentos ni cobrando
+// por sesión. Las secciones siguen escritas abajo; poner en true para reactivarlas.
+// Al reactivar, revisar también: el hero, la tarjeta "Banquete incluido" de "Qué
+// incluye", el bullet de team building, SITE.description y el JSON-LD de esta página.
+const MOSTRAR_PRECIOS = false;
+const MOSTRAR_BANQUETE = false;
+
 const pasos = [
   {
     titulo: 'Reúne a tu grupo',
@@ -43,12 +50,6 @@ const incluye = [
     alt: 'Escenografía digital e interactiva de una mazmorra de fantasía',
   },
   {
-    titulo: 'Banquete incluido',
-    texto: 'Comida y bebida temática servida en plena aventura. Ningún héroe pelea con el estómago vacío.',
-    img: banquete,
-    alt: 'Banquete temático servido durante una sesión de rol',
-  },
-  {
     titulo: 'Todo el equipo',
     texto: 'Dados, miniaturas, hojas de personaje y accesorios. Solo trae tu imaginación.',
     img: mesaJuego,
@@ -58,12 +59,10 @@ const incluye = [
 
 const jsonLd = JSON.stringify({
   '@context': 'https://schema.org',
-  '@type': ['LocalBusiness', 'FoodEstablishment'],
+  '@type': 'LocalBusiness',
   additionalType: 'https://schema.org/EntertainmentBusiness',
   name: 'Forjadores de Leyendas',
   description: 'Posada temática con sesiones privadas de Dungeons & Dragons y juegos de rol en Puebla.',
-  servesCuisine: 'Comida temática de fantasía',
-  priceRange: '$300–$3,500 MXN',
   url: SITE.url,
   telephone: '+' + SITE.whatsapp,
   address: {
@@ -75,19 +74,6 @@ const jsonLd = JSON.stringify({
     addressCountry: SITE.address.country,
   },
   sameAs: Object.values(SITE.social),
-  hasMenu: {
-    '@type': 'Menu',
-    name: 'El Banquete (menú de temporada)',
-    hasMenuSection: CATEGORIAS.map((cat) => ({
-      '@type': 'MenuSection',
-      name: cat,
-      hasMenuItem: MENU.filter((m) => m.categoria === cat).map((m) => ({
-        '@type': 'MenuItem',
-        name: m.nombre,
-        description: m.descripcion,
-      })),
-    })),
-  },
 }).replace(/</g, '\\u003c');
 
 const direccionCompleta = `${SITE.address.street}, ${SITE.address.neighborhood}, ${SITE.address.city}, ${SITE.address.state} ${SITE.address.zip}, México`;
@@ -109,16 +95,10 @@ const direccionCompleta = `${SITE.address.street}, ${SITE.address.neighborhood},
         Cada tirada de dados forja una leyenda
       </h1>
       <p class="mx-auto mt-6 max-w-prose text-base opacity-90 sm:text-lg">
-        Sesiones privadas de Dungeons &amp; Dragons y juegos de rol en una posada temática en el corazón de Puebla. Con comida, bebida y un Guardián de Historias que hará tu aventura inolvidable.
+        Sesiones privadas de Dungeons &amp; Dragons y juegos de rol en una posada temática en el corazón de Puebla, guiadas por un Guardián de Historias que hará tu aventura inolvidable.
       </p>
       <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
         <WhatsAppButton message="¡Saludos, Guardián! Quiero reservar una sesión de rol en la posada. 🎲" label="Reserva tu aventura" />
-        <a
-          href="/#precios"
-          class="inline-block rounded-lg border-2 border-parchment-light px-6 py-3 font-display font-bold tracking-wide text-parchment-light transition-colors hover:bg-parchment-light hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2"
-        >
-          Ver precios
-        </a>
       </div>
     </div>
   </section>
@@ -126,7 +106,7 @@ const direccionCompleta = `${SITE.address.street}, ${SITE.address.neighborhood},
   <section class="bg-parchment-light">
     <div class="mx-auto max-w-6xl px-4 py-16">
       <SectionTitle title="¿Nunca has jugado rol? Perfecto: las mejores leyendas empiezan en el nivel 1." />
-      <p class="mx-auto -mt-6 mb-10 max-w-prose text-center opacity-90">¿Buscas qué hacer en Puebla que no sea lo de siempre? Esto es más que una noche de juegos de mesa: es rol en vivo, con Guardián de Historias y banquete incluido.</p>
+      <p class="mx-auto -mt-6 mb-10 max-w-prose text-center opacity-90">¿Buscas qué hacer en Puebla que no sea lo de siempre? Esto es más que una noche de juegos de mesa: es rol en vivo, con un Guardián de Historias que guía toda la aventura.</p>
       <div class="grid gap-10 lg:grid-cols-2 lg:items-center">
         <Image
           src={novatos}
@@ -155,15 +135,15 @@ const direccionCompleta = `${SITE.address.street}, ${SITE.address.neighborhood},
   <section class="bg-parchment">
     <div class="mx-auto max-w-6xl px-4 py-16">
       <SectionTitle title="Qué incluye tu sesión" />
-      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {incluye.map((item) => (
           <div class="card overflow-hidden rounded-xl bg-parchment-light">
             <Image
               src={item.img}
               alt={item.alt}
               class="h-48 w-full object-cover"
-              widths={[300, 600]}
-              sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+              widths={[400, 800]}
+              sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
             />
             <div class="p-5">
               <h3 class="font-display text-lg font-bold text-wood">{item.titulo}</h3>
@@ -175,6 +155,7 @@ const direccionCompleta = `${SITE.address.street}, ${SITE.address.neighborhood},
     </div>
   </section>
 
+  {MOSTRAR_PRECIOS && (
   <section id="precios" class="bg-parchment-light">
     <div class="mx-auto max-w-6xl px-4 py-16">
       <SectionTitle title="Elige tu aventura" />
@@ -219,7 +200,9 @@ const direccionCompleta = `${SITE.address.street}, ${SITE.address.neighborhood},
       </div>
     </div>
   </section>
+  )}
 
+  {MOSTRAR_BANQUETE && (
   <section id="banquete" class="bg-parchment">
     <div class="mx-auto max-w-6xl px-4 py-16">
       <SectionTitle title="Comida y bebida dignas de una leyenda" />
@@ -252,6 +235,7 @@ const direccionCompleta = `${SITE.address.street}, ${SITE.address.neighborhood},
       </div>
     </div>
   </section>
+  )}
 
   <section class="bg-parchment-deep">
     <div class="mx-auto max-w-6xl px-4 py-16">
@@ -276,7 +260,7 @@ const direccionCompleta = `${SITE.address.street}, ${SITE.address.neighborhood},
             </li>
             <li class="flex gap-3">
               <span class="text-fire" aria-hidden="true">✦</span>
-              <span>Comida y bebida temática incluidas en la experiencia.</span>
+              <span>Escenografía inmersiva que convierte la mesa en el escenario de la aventura.</span>
             </li>
             <li class="flex gap-3">
               <span class="text-fire" aria-hidden="true">✦</span>

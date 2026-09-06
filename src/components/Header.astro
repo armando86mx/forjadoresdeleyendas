@@ -1,11 +1,10 @@
 ---
 import { Image } from 'astro:assets';
 import escudo from '@/assets/img/escudo.png';
+// El Banquete, Precios y FAQ salieron del menú mientras esos servicios están en pausa
+// (ver flags en src/pages/index.astro).
 const nav = [
   { href: '/', label: 'Inicio' },
-  { href: '/#banquete', label: 'El Banquete' },
-  { href: '/#precios', label: 'Precios' },
-  { href: '/faq/', label: 'FAQ' },
   { href: '/cronicas/', label: 'Crónicas' },
 ];
 const { pathname } = Astro.url;

@@ -14,8 +14,10 @@ interface Props {
   description: string;
   ogImage?: string;
   type?: 'website' | 'article';
+  /** Excluye la página de los buscadores sin borrarla del sitio. */
+  noindex?: boolean;
 }
-const { title, description, ogImage = '/og-default.jpg', type = 'website' } = Astro.props;
+const { title, description, ogImage = '/og-default.jpg', type = 'website', noindex = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
 ---
 <!doctype html>
@@ -25,6 +27,7 @@ const canonical = new URL(Astro.url.pathname, SITE.url).href;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
