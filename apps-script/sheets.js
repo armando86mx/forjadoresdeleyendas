@@ -17,7 +17,10 @@ function leerTabla(nombre) {
 function agregarFila(nombre, obj) {
   var h = hoja_(nombre);
   var enc = h.getRange(1, 1, 1, h.getLastColumn()).getValues()[0];
-  h.appendRow(enc.map(function (col) { return obj[col] !== undefined ? obj[col] : ''; }));
+  var fila = enc.map(function (col) { return obj[col] !== undefined ? obj[col] : ''; });
+  // setValues (y no appendRow) para que el formato de texto '@' de las columnas
+  // se respete y Sheets no convierta fechas/horas/teléfonos.
+  h.getRange(h.getLastRow() + 1, 1, 1, fila.length).setValues([fila]);
 }
 
 function borrarFilaPorId(nombre, id) {

@@ -1,6 +1,7 @@
 // Correr UNA VEZ desde el editor de Apps Script para crear pestañas y semillas.
 function instalar() {
   var ss = SpreadsheetApp.getActive();
+  ss.setSpreadsheetTimeZone(CONFIG.zonaHoraria); // la hoja nació con otra zona; alinearla con el script
   Object.keys(ENCABEZADOS).forEach(function (nombre) {
     var h = ss.getSheetByName(nombre) || ss.insertSheet(nombre);
     // Todo como texto plano: evita que Sheets "corrija" fechas, horas y teléfonos.
