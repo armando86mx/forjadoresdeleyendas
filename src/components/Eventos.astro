@@ -112,20 +112,41 @@ import SectionTitle from '@/components/SectionTitle.astro';
   document.addEventListener('eventos:pintados', (e: any) => {
     eventosCache = e.detail;
     document.querySelectorAll<HTMLButtonElement>('.btn-registrar').forEach((btn) => {
-      btn.addEventListener('click', () => abrirRegistro(btn.dataset.id!));
+      btn.addEventListener('click', async () => {
+        btn.disabled = true;
+        btn.textContent = 'Consultando cupos…';
+        await abrirRegistro(btn.dataset.id!);
+      });
     });
   });
 
   // Una sola promesa de carga: "existe window.grecaptcha" NO significa "está listo" —
   // esperar siempre a grecaptcha.ready evita la carrera al enviar rápido el formulario.
+  // Si el script no carga (bloqueador de anuncios, red), la promesa se rechaza y se
+  // resetea para permitir reintentos; enviar() muestra el error y reactiva el botón.
   let recaptchaListo: Promise<void> | null = null;
   function cargarRecaptcha(): Promise<void> {
     if (!RECAPTCHA_SITE_KEY) return Promise.resolve();
     if (!recaptchaListo) {
-      recaptchaListo = new Promise((res) => {
+      recaptchaListo = new Promise((res, rej) => {
         const s = document.createElement('script');
+        let terminado = false;
+        const falla = () => {
+          if (terminado) return;
+          terminado = true;
+          recaptchaListo = null;
+          s.remove();
+          rej(new Error('No se pudo cargar la verificación de seguridad. Si usas un bloqueador de anuncios, permítelo e intenta de nuevo.'));
+        };
+        const limite = setTimeout(falla, 10000);
         s.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`;
-        s.onload = () => (window as any).grecaptcha.ready(() => res());
+        s.onload = () => (window as any).grecaptcha.ready(() => {
+          if (terminado) return;
+          terminado = true;
+          clearTimeout(limite);
+          res();
+        });
+        s.onerror = () => { clearTimeout(limite); falla(); };
         document.head.appendChild(s);
       });
     }
@@ -148,9 +169,11 @@ import SectionTitle from '@/components/SectionTitle.astro';
       </fieldset>`;
   }
 
-  function abrirRegistro(id: string): void {
+  async function abrirRegistro(id: string): Promise<void> {
+    // Reconsulta al abrir: cupos frescos en el selector (el servidor sigue siendo el árbitro final).
+    await (window as any).__recargarEventos();
     const ev = eventosCache.find((x) => String(x.id) === String(id));
-    if (!ev) return;
+    if (!ev || ev.concluido || ev.lugaresDisponibles === 0) return; // la repintada ya actualizó la tarjeta
     titulo.textContent = ev.nombre;
     const max = Math.min(ev.lugaresDisponibles, 6);
     cuerpo.innerHTML = `
@@ -168,7 +191,7 @@ import SectionTitle from '@/components/SectionTitle.astro';
         </div>
         <p id="registro-error" class="mt-3 hidden rounded-lg bg-fire/10 px-3 py-2 text-sm font-bold text-fire" role="alert"></p>
         <button type="submit" class="mt-5 w-full rounded-lg bg-fire px-6 py-3 font-display font-bold tracking-wide text-parchment-light transition-colors hover:bg-amber hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber">Confirmar registro</button>
-        <p class="mt-3 text-center text-xs opacity-70">Tus datos solo se usan para gestionar tu registro. <a href="/aviso-de-privacidad/" target="_blank" class="underline">Aviso de privacidad</a>.</p>
+        <p class="mt-3 text-center text-xs opacity-70">Tus datos solo se usan para gestionar tu registro. <a href="/aviso-de-privacidad/" target="_blank" rel="noopener" class="underline">Aviso de privacidad</a>.</p>
       </form>`;
     const form = document.getElementById('registro-form') as HTMLFormElement;
     form.querySelector<HTMLSelectElement>('[name=cupos]')!.addEventListener('change', (e) => {
@@ -178,7 +201,7 @@ import SectionTitle from '@/components/SectionTitle.astro';
     });
     form.addEventListener('submit', (e) => { e.preventDefault(); enviar(ev, form); });
     dialog.showModal();
-    cargarRecaptcha(); // precarga mientras el usuario escribe
+    cargarRecaptcha().catch(() => {}); // precarga; si falla aquí, enviar() lo reintenta y avisa
   }
 
   async function enviar(ev: any, form: HTMLFormElement): Promise<void> {
@@ -206,7 +229,12 @@ import SectionTitle from '@/components/SectionTitle.astro';
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ eventoId: ev.id, personas, recaptchaToken: token, apellido2: datos.get('apellido2') }),
       });
-      const r = await resp.json();
+      let r;
+      try {
+        r = await resp.json();
+      } catch {
+        throw new Error('El tablón no respondió como esperábamos. Intenta de nuevo en un momento.');
+      }
       if (!r.ok) throw new Error(r.error || 'No pudimos guardar tu registro.');
       cuerpo.innerHTML = `
         <p class="mt-4 rounded-lg bg-parchment px-4 py-6 text-center">
