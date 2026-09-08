@@ -1392,15 +1392,20 @@ document.addEventListener('eventos:pintados', (e: any) => {
   });
 });
 
+// Una sola promesa de carga: "existe window.grecaptcha" NO significa "está listo" —
+// esperar siempre a grecaptcha.ready evita la carrera al enviar rápido el formulario.
+let recaptchaListo: Promise<void> | null = null;
 function cargarRecaptcha(): Promise<void> {
-  return new Promise((res) => {
-    const w = window as any;
-    if (!RECAPTCHA_SITE_KEY || w.grecaptcha) return res();
-    const s = document.createElement('script');
-    s.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`;
-    s.onload = () => w.grecaptcha.ready(res);
-    document.head.appendChild(s);
-  });
+  if (!RECAPTCHA_SITE_KEY) return Promise.resolve();
+  if (!recaptchaListo) {
+    recaptchaListo = new Promise((res) => {
+      const s = document.createElement('script');
+      s.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`;
+      s.onload = () => (window as any).grecaptcha.ready(() => res());
+      document.head.appendChild(s);
+    });
+  }
+  return recaptchaListo;
 }
 
 function camposPersona(i: number): string {
