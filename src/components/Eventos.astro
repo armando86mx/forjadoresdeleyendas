@@ -13,6 +13,16 @@ import SectionTitle from '@/components/SectionTitle.astro';
   </div>
 </section>
 
+<dialog id="registro-dialog" class="m-auto w-[min(92vw,28rem)] rounded-xl bg-parchment-light p-0 text-ink backdrop:bg-ink/70">
+  <div class="max-h-[85vh] overflow-y-auto p-6">
+    <div class="flex items-start justify-between gap-4">
+      <h3 class="font-display text-xl font-bold text-wood" id="registro-titulo">Registro</h3>
+      <button type="button" id="registro-cerrar" class="rounded p-2 text-2xl leading-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber" aria-label="Cerrar">×</button>
+    </div>
+    <div id="registro-cuerpo"></div>
+  </div>
+</dialog>
+
 <script>
   import { EVENTOS_API } from '@/lib/eventos-config';
 
@@ -22,7 +32,8 @@ import SectionTitle from '@/components/SectionTitle.astro';
 
   function fechaBonita(iso: string): string {
     const [a, m, d] = iso.split('-').map(Number);
-    return new Date(a, m - 1, d).toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' });
+    const s = new Date(a, m - 1, d).toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' });
+    return s.charAt(0).toUpperCase() + s.slice(1);
   }
   function horaBonita(hhmm: string): string {
     const [h, m] = hhmm.split(':').map(Number);
@@ -30,9 +41,11 @@ import SectionTitle from '@/components/SectionTitle.astro';
   }
 
   function tarjeta(ev: any): string {
-    const foto = ev.fotoUrl
-      ? `<img src="${esc(ev.fotoUrl)}" alt="" loading="lazy" class="h-44 w-full object-cover">`
-      : `<div class="flex h-44 w-full items-center justify-center bg-parchment-deep font-display text-5xl" aria-hidden="true">🎲</div>`;
+    const foto = `<div class="relative flex h-44 w-full items-center justify-center bg-parchment-deep font-display text-5xl" aria-hidden="true">🎲${
+      ev.fotoUrl
+        ? `<img src="${esc(ev.fotoUrl)}" alt="" loading="lazy" referrerpolicy="no-referrer" class="absolute inset-0 h-full w-full object-cover" onerror="this.remove()">`
+        : ''
+    }</div>`;
     const accion = ev.concluido
       ? `<p class="mt-4 rounded-lg bg-parchment-deep px-4 py-3 text-center font-display font-bold opacity-70">Evento concluido</p>`
       : ev.lugaresDisponibles === 0
@@ -46,7 +59,7 @@ import SectionTitle from '@/components/SectionTitle.astro';
         ${foto}
         <div class="flex grow flex-col p-5">
           <h4 class="font-display text-lg font-bold text-wood">${esc(ev.nombre)}</h4>
-          <p class="mt-1 text-sm font-bold capitalize">${esc(fechaBonita(ev.fecha))} · ${esc(horaBonita(ev.hora))}</p>
+          <p class="mt-1 text-sm font-bold">${esc(fechaBonita(ev.fecha))} · ${esc(horaBonita(ev.hora))}</p>
           <p class="mt-2 text-sm opacity-90">${esc(ev.descripcion)}</p>
           <p class="mt-3 text-sm">Guildmaster: <strong>${esc(ev.guildmaster)}</strong></p>
           <p class="text-sm">${esc(ev.sede.nombre)} — <a href="${esc(ev.sede.mapsUrl)}" target="_blank" rel="noopener" class="underline">cómo llegar</a></p>
@@ -86,4 +99,122 @@ import SectionTitle from '@/components/SectionTitle.astro';
 
   (window as any).__recargarEventos = cargar;
   cargar();
+
+  import { RECAPTCHA_SITE_KEY } from '@/lib/eventos-config';
+
+  const dialog = document.getElementById('registro-dialog') as HTMLDialogElement;
+  const cuerpo = document.getElementById('registro-cuerpo')!;
+  const titulo = document.getElementById('registro-titulo')!;
+  document.getElementById('registro-cerrar')!.addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
+
+  let eventosCache: any[] = [];
+  document.addEventListener('eventos:pintados', (e: any) => {
+    eventosCache = e.detail;
+    document.querySelectorAll<HTMLButtonElement>('.btn-registrar').forEach((btn) => {
+      btn.addEventListener('click', () => abrirRegistro(btn.dataset.id!));
+    });
+  });
+
+  function cargarRecaptcha(): Promise<void> {
+    return new Promise((res) => {
+      const w = window as any;
+      if (!RECAPTCHA_SITE_KEY || w.grecaptcha) return res();
+      const s = document.createElement('script');
+      s.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`;
+      s.onload = () => w.grecaptcha.ready(res);
+      document.head.appendChild(s);
+    });
+  }
+
+  function camposPersona(i: number): string {
+    return `
+      <fieldset class="mt-4 rounded-lg border border-wood/30 p-4">
+        <legend class="px-1 font-display text-sm font-bold text-wood">Aventurero ${i + 1}</legend>
+        <label class="mt-1 block text-sm">Nombre
+          <input name="nombre-${i}" required minlength="2" class="mt-1 w-full rounded-lg border border-wood/40 bg-white px-3 py-2">
+        </label>
+        <label class="mt-3 block text-sm">Teléfono (10 dígitos)
+          <input name="telefono-${i}" type="tel" required pattern="[0-9() +-]{10,}" class="mt-1 w-full rounded-lg border border-wood/40 bg-white px-3 py-2">
+        </label>
+        <label class="mt-3 block text-sm">Correo
+          <input name="correo-${i}" type="email" required class="mt-1 w-full rounded-lg border border-wood/40 bg-white px-3 py-2">
+        </label>
+      </fieldset>`;
+  }
+
+  function abrirRegistro(id: string): void {
+    const ev = eventosCache.find((x) => String(x.id) === String(id));
+    if (!ev) return;
+    titulo.textContent = ev.nombre;
+    const max = Math.min(ev.lugaresDisponibles, 6);
+    cuerpo.innerHTML = `
+      <p class="mt-1 text-sm opacity-90">${esc(fechaBonita(ev.fecha))} · ${esc(horaBonita(ev.hora))} · ${esc(ev.sede.nombre)}, ${esc(ev.ciudad)}</p>
+      <form id="registro-form" class="mt-2">
+        <label class="mt-3 block text-sm">¿Cuántos lugares?
+          <select name="cupos" class="mt-1 w-full rounded-lg border border-wood/40 bg-white px-3 py-2">
+            ${Array.from({ length: max }, (_, i) => `<option value="${i + 1}">${i + 1}</option>`).join('')}
+          </select>
+        </label>
+        <div id="registro-personas">${camposPersona(0)}</div>
+        <!-- Honeypot: invisible para humanos; los bots lo llenan -->
+        <div style="position:absolute;left:-5000px" aria-hidden="true">
+          <input name="apellido2" tabindex="-1" autocomplete="off">
+        </div>
+        <p id="registro-error" class="mt-3 hidden rounded-lg bg-fire/10 px-3 py-2 text-sm font-bold text-fire" role="alert"></p>
+        <button type="submit" class="mt-5 w-full rounded-lg bg-fire px-6 py-3 font-display font-bold tracking-wide text-parchment-light transition-colors hover:bg-amber hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber">Confirmar registro</button>
+        <p class="mt-3 text-center text-xs opacity-70">Tus datos solo se usan para gestionar tu registro. <a href="/aviso-de-privacidad/" target="_blank" class="underline">Aviso de privacidad</a>.</p>
+      </form>`;
+    const form = document.getElementById('registro-form') as HTMLFormElement;
+    form.querySelector<HTMLSelectElement>('[name=cupos]')!.addEventListener('change', (e) => {
+      const n = Number((e.target as HTMLSelectElement).value);
+      document.getElementById('registro-personas')!.innerHTML =
+        Array.from({ length: n }, (_, i) => camposPersona(i)).join('');
+    });
+    form.addEventListener('submit', (e) => { e.preventDefault(); enviar(ev, form); });
+    dialog.showModal();
+    cargarRecaptcha(); // precarga mientras el usuario escribe
+  }
+
+  async function enviar(ev: any, form: HTMLFormElement): Promise<void> {
+    const boton = form.querySelector<HTMLButtonElement>('[type=submit]')!;
+    const errorEl = document.getElementById('registro-error')!;
+    errorEl.classList.add('hidden');
+    boton.disabled = true;
+    boton.textContent = 'Reservando lugares…';
+    try {
+      const datos = new FormData(form);
+      const n = Number(datos.get('cupos'));
+      const personas = Array.from({ length: n }, (_, i) => ({
+        nombre: datos.get(`nombre-${i}`),
+        telefono: datos.get(`telefono-${i}`),
+        correo: datos.get(`correo-${i}`),
+      }));
+      await cargarRecaptcha();
+      const w = window as any;
+      const token = RECAPTCHA_SITE_KEY && w.grecaptcha
+        ? await w.grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: 'registro' })
+        : '';
+      const resp = await fetch(EVENTOS_API, {
+        method: 'POST',
+        // text/plain evita el preflight CORS que Apps Script no soporta
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ eventoId: ev.id, personas, recaptchaToken: token, apellido2: datos.get('apellido2') }),
+      });
+      const r = await resp.json();
+      if (!r.ok) throw new Error(r.error || 'No pudimos guardar tu registro.');
+      cuerpo.innerHTML = `
+        <p class="mt-4 rounded-lg bg-parchment px-4 py-6 text-center">
+          <strong class="font-display text-lg text-wood">¡Lugar reservado! 🎲</strong><br>
+          <span class="mt-2 block text-sm opacity-90">Te enviamos un correo con todos los detalles del evento. Nos vemos en la mesa.</span>
+        </p>`;
+      (window as any).__recargarEventos();
+    } catch (err: any) {
+      errorEl.textContent = err.message || 'Algo salió mal. Intenta de nuevo.';
+      errorEl.classList.remove('hidden');
+      boton.disabled = false;
+      boton.textContent = 'Confirmar registro';
+      (window as any).__recargarEventos(); // refresca cupos visibles tras un rechazo
+    }
+  }
 </script>
