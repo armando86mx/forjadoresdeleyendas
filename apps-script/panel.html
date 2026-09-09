@@ -14,7 +14,10 @@
   button:disabled { opacity: .6; cursor: default; }
   button.mini { background: #6b5b3e; padding: 6px 10px; font-size: .8rem; }
   ul { list-style: none; padding: 0; }
-  li { display: flex; justify-content: space-between; gap: 8px; padding: 8px 0; border-bottom: 1px solid #e5dcc5; align-items: center; }
+  li { display: flex; justify-content: space-between; gap: 8px; padding: 8px 0; border-bottom: 1px solid #e5dcc5; align-items: flex-start; }
+  /* Los botones de acción se quedan juntos y en el primer renglón aunque el texto ocupe varios. */
+  .acciones { display: flex; gap: 6px; flex-shrink: 0; }
+  button.mini { flex-shrink: 0; }
   #estado { position: fixed; top: 0; left: 0; right: 0; background: #2b6b2f; color: #fff; padding: 8px; text-align: center; display: none; z-index: 9; }
   label.lbl { display: grid; gap: 4px; font-size: .85rem; font-weight: bold; }
 </style>
@@ -109,7 +112,7 @@ function pintar() {
   lista('l-sistemas', D.sistemas, (f) => f.nombre, 'sistemas');
   document.getElementById('l-eventos').innerHTML = D.eventos.map((f) =>
     `<li><span>${esc(`${f.partida} — ${nombreDe(D.nombresEventos, f.nombreEventoId)} — ${f.fecha} ${f.hora} — ${nombreDe(D.sedes, f.sedeId)}`)}</span>` +
-    `<span><button class="mini" onclick="editarEvento('${esc(f.id)}')">Editar</button> ` +
+    `<span class="acciones"><button class="mini" onclick="editarEvento('${esc(f.id)}')">Editar</button>` +
     `<button class="mini" onclick="borrar(this,'eventos','${esc(f.id)}')">Borrar</button></span></li>`
   ).join('') || '<li>Sin datos.</li>';
   pintarRegistros();
