@@ -12,15 +12,28 @@ function servirPanel_() {
     .addMetaTag('viewport', 'width=device-width, initial-scale=1');
 }
 
+// Tablas de catálogo simple (id, nombre) donde el nombre no puede repetirse.
+var TABLAS_CATALOGO_ = ['ciudades', 'sedes', 'narradores', 'nombresEventos', 'sistemas'];
+
 function panelDatos() {
   exigirAdmin_();
   return {
     ciudades: leerTabla(HOJAS.ciudades),
     sedes: leerTabla(HOJAS.sedes),
-    guildmasters: leerTabla(HOJAS.guildmasters),
+    narradores: leerTabla(HOJAS.narradores),
+    nombresEventos: leerTabla(HOJAS.nombresEventos),
+    sistemas: leerTabla(HOJAS.sistemas),
     eventos: leerTabla(HOJAS.eventos),
     registros: leerTabla(HOJAS.registros),
   };
+}
+
+// true si alguna ejecución (distinta de excluirId) ya ocupa esa mazmorra a esa hora.
+function chocaEjecucion_(fila, excluirId) {
+  return leerEventos_().some(function (ev) {
+    if (excluirId !== undefined && String(ev.id) === String(excluirId)) return false;
+    return String(ev.sedeId) === String(fila.sedeId) && ev.fecha === fila.fecha && ev.hora === fila.hora;
+  });
 }
 
 function panelCrear(tabla, obj) {
@@ -30,14 +43,16 @@ function panelCrear(tabla, obj) {
   var fila = { id: nuevoId_() };
   var enc = ENCABEZADOS[nombre];
   enc.forEach(function (col) { if (obj[col] !== undefined) fila[col] = String(obj[col]).trim(); });
+  if (TABLAS_CATALOGO_.indexOf(tabla) !== -1) {
+    // Un catálogo con nombre repetido solo puede ser un accidente (doble clic, error de captura).
+    var nombreNuevo = String(fila.nombre).trim().toLowerCase();
+    var duplicado = leerTabla(nombre).some(function (f) { return String(f.nombre).trim().toLowerCase() === nombreNuevo; });
+    if (duplicado) throw new Error('Ya existe ' + fila.nombre + ' con ese nombre.');
+  }
   if (tabla === 'eventos') {
     fila.cupo = CONFIG.cupoPorEvento;
-    // Un evento idéntico solo puede ser un accidente (doble clic, semilla repetida).
-    var duplicado = leerEventos_().some(function (ev) {
-      return ev.nombre === fila.nombre && String(ev.sedeId) === String(fila.sedeId) &&
-        ev.fecha === fila.fecha && ev.hora === fila.hora;
-    });
-    if (duplicado) throw new Error('Ya existe un evento con ese nombre, sede, fecha y hora.');
+    // Dos partidas no caben en la misma mazmorra a la misma hora, sin importar el nombre.
+    if (chocaEjecucion_(fila)) throw new Error('Esa mazmorra ya tiene una partida a esa hora.');
   }
   agregarFila(nombre, fila);
   regenerarVista();
@@ -52,6 +67,9 @@ function panelEditar(tabla, id, obj) {
   ENCABEZADOS[nombre].forEach(function (col) {
     if (col !== 'id' && obj[col] !== undefined) limpio[col] = String(obj[col]).trim();
   });
+  if (tabla === 'eventos' && limpio.sedeId !== undefined && limpio.fecha !== undefined && limpio.hora !== undefined) {
+    if (chocaEjecucion_(limpio, id)) throw new Error('Esa mazmorra ya tiene una partida a esa hora.');
+  }
   actualizarFilaPorId(nombre, id, limpio);
   regenerarVista();
 }

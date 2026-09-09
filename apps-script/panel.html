@@ -11,6 +11,7 @@
   form { display: grid; gap: 8px; margin: 12px 0; }
   input, select, textarea, button { font: inherit; padding: 10px; border: 1px solid #b9a77f; border-radius: 6px; }
   button { background: #a33b20; color: #fff; border: 0; cursor: pointer; }
+  button:disabled { opacity: .6; cursor: default; }
   button.mini { background: #6b5b3e; padding: 6px 10px; font-size: .8rem; }
   ul { list-style: none; padding: 0; }
   li { display: flex; justify-content: space-between; gap: 8px; padding: 8px 0; border-bottom: 1px solid #e5dcc5; align-items: center; }
@@ -21,14 +22,16 @@
 <div id="estado"></div>
 <h1>⚔️ Administración de eventos</h1>
 
-<h2>Nuevo evento</h2>
+<h2>Nueva ejecución</h2>
 <form id="f-evento">
-  <input name="nombre" placeholder="Nombre del evento" required>
-  <textarea name="descripcion" placeholder="Descripción de la aventura" rows="3" required></textarea>
+  <select name="nombreEventoId" id="sel-nombre-evento" required></select>
+  <input name="partida" placeholder="Partida" required>
+  <select name="sistemaId" id="sel-sistema" required></select>
   <select name="sedeId" id="sel-sede" required></select>
-  <select name="guildmasterId" id="sel-gm" required></select>
+  <select name="narradorId" id="sel-narrador" required></select>
   <input name="fecha" type="date" required>
   <input name="hora" type="time" required>
+  <textarea name="descripcion" placeholder="Descripción de la aventura" rows="3" required></textarea>
   <input type="file" id="foto" accept="image/*">
   <button>Crear evento</button>
 </form>
@@ -48,16 +51,24 @@
 </form>
 <ul id="l-sedes"></ul>
 
-<h2>Guildmasters</h2>
-<form id="f-gm"><input name="nombre" placeholder="Nombre" required><button>Crear</button></form>
-<ul id="l-gms"></ul>
+<h2>Narradores</h2>
+<form id="f-narrador"><input name="nombre" placeholder="Nombre" required><button>Crear</button></form>
+<ul id="l-narradores"></ul>
 
 <h2>Ciudades</h2>
 <form id="f-ciudad"><input name="nombre" placeholder="Nombre" required><button>Crear</button></form>
 <ul id="l-ciudades"></ul>
 
+<h2>Nombres de eventos</h2>
+<form id="f-nombre-evento"><input name="nombre" placeholder="Nombre del evento" required><button>Crear</button></form>
+<ul id="l-nombres-eventos"></ul>
+
+<h2>Sistemas de juego</h2>
+<form id="f-sistema"><input name="nombre" placeholder="Nombre del sistema" required><button>Crear</button></form>
+<ul id="l-sistemas"></ul>
+
 <script>
-let D = { ciudades: [], sedes: [], guildmasters: [], eventos: [], registros: [] };
+let D = { ciudades: [], sedes: [], narradores: [], nombresEventos: [], sistemas: [], eventos: [], registros: [] };
 
 function avisar(msj) {
   const e = document.getElementById('estado');
@@ -79,22 +90,26 @@ function opciones(sel, filas, texto) {
 }
 function lista(id, filas, texto, tabla, verbo = 'Borrar') {
   document.getElementById(id).innerHTML = filas.map((f) =>
-    `<li><span>${esc(texto(f))}</span><button class="mini" onclick="borrar('${tabla}','${esc(f.id)}')">${verbo}</button></li>`
+    `<li><span>${esc(texto(f))}</span><button class="mini" onclick="borrar(this,'${tabla}','${esc(f.id)}')">${verbo}</button></li>`
   ).join('') || '<li>Sin datos.</li>';
 }
 
 function pintar() {
   opciones(document.getElementById('sel-ciudad'), D.ciudades, (f) => f.nombre);
   opciones(document.getElementById('sel-sede'), D.sedes, (f) => `${f.nombre} (${nombreDe(D.ciudades, f.ciudadId)})`);
-  opciones(document.getElementById('sel-gm'), D.guildmasters, (f) => f.nombre);
-  opciones(document.getElementById('sel-evento-reg'), D.eventos, (f) => `${f.nombre} — ${f.fecha}`);
+  opciones(document.getElementById('sel-narrador'), D.narradores, (f) => f.nombre);
+  opciones(document.getElementById('sel-nombre-evento'), D.nombresEventos, (f) => f.nombre);
+  opciones(document.getElementById('sel-sistema'), D.sistemas, (f) => f.nombre);
+  opciones(document.getElementById('sel-evento-reg'), D.eventos, (f) => `${f.partida} — ${nombreDe(D.nombresEventos, f.nombreEventoId)} — ${f.fecha}`);
   lista('l-ciudades', D.ciudades, (f) => f.nombre, 'ciudades');
-  lista('l-gms', D.guildmasters, (f) => f.nombre, 'guildmasters');
+  lista('l-narradores', D.narradores, (f) => f.nombre, 'narradores');
   lista('l-sedes', D.sedes, (f) => `${f.nombre} — ${nombreDe(D.ciudades, f.ciudadId)}`, 'sedes');
+  lista('l-nombres-eventos', D.nombresEventos, (f) => f.nombre, 'nombresEventos');
+  lista('l-sistemas', D.sistemas, (f) => f.nombre, 'sistemas');
   document.getElementById('l-eventos').innerHTML = D.eventos.map((f) =>
-    `<li><span>${esc(`${f.nombre} — ${f.fecha} ${f.hora} — ${nombreDe(D.sedes, f.sedeId)}`)}</span>` +
+    `<li><span>${esc(`${f.partida} — ${nombreDe(D.nombresEventos, f.nombreEventoId)} — ${f.fecha} ${f.hora} — ${nombreDe(D.sedes, f.sedeId)}`)}</span>` +
     `<span><button class="mini" onclick="editarEvento('${esc(f.id)}')">Editar</button> ` +
-    `<button class="mini" onclick="borrar('eventos','${esc(f.id)}')">Borrar</button></span></li>`
+    `<button class="mini" onclick="borrar(this,'eventos','${esc(f.id)}')">Borrar</button></span></li>`
   ).join('') || '<li>Sin datos.</li>';
   pintarRegistros();
 }
@@ -103,28 +118,41 @@ function pintarRegistros() {
   const filas = D.registros.filter((r) => String(r.eventoId) === String(evId));
   document.getElementById('l-registros').innerHTML = filas.map((r) =>
     `<li><span>${esc(r.nombre)} · ${esc(r.telefono)} · ${esc(r.correo)}</span>` +
-    `<button class="mini" onclick="borrar('registros','${esc(r.id)}')">Liberar lugar</button></li>`
+    `<button class="mini" onclick="borrar(this,'registros','${esc(r.id)}')">Liberar lugar</button></li>`
   ).join('') || '<li>Sin registros.</li>';
 }
-async function borrar(tabla, id) {
+async function borrar(btn, tabla, id) {
   if (!confirm('¿Seguro? Esta acción no se puede deshacer.')) return;
-  await llamar('panelBorrar', tabla, id);
-  avisar('Borrado.'); recargar();
+  btn.disabled = true;
+  try {
+    await llamar('panelBorrar', tabla, id);
+    avisar('Borrado.'); recargar();
+  } finally {
+    btn.disabled = false;
+  }
 }
 document.getElementById('sel-evento-reg').onchange = pintarRegistros;
 
 function alta(idForm, tabla, extra) {
   document.getElementById(idForm).onsubmit = async (ev) => {
     ev.preventDefault();
-    const datos = Object.fromEntries(new FormData(ev.target));
-    if (extra) Object.assign(datos, await extra());
-    await llamar('panelCrear', tabla, datos);
-    avisar('Guardado.'); ev.target.reset(); recargar();
+    const b = ev.target.querySelector('button:not(.mini)');
+    b.disabled = true;
+    try {
+      const datos = Object.fromEntries(new FormData(ev.target));
+      if (extra) Object.assign(datos, await extra());
+      await llamar('panelCrear', tabla, datos);
+      avisar('Guardado.'); ev.target.reset(); recargar();
+    } finally {
+      b.disabled = false;
+    }
   };
 }
 alta('f-ciudad', 'ciudades');
-alta('f-gm', 'guildmasters');
+alta('f-narrador', 'narradores');
 alta('f-sede', 'sedes');
+alta('f-nombre-evento', 'nombresEventos');
+alta('f-sistema', 'sistemas');
 
 // El formulario de evento tiene modo crear/editar propio (no usa alta()).
 let editandoEventoId = null;
@@ -133,23 +161,29 @@ function editarEvento(id) {
   if (!ev) return;
   editandoEventoId = id;
   const f = document.getElementById('f-evento');
-  ['nombre', 'descripcion', 'sedeId', 'guildmasterId', 'fecha', 'hora'].forEach((c) => { f.elements[c].value = ev[c]; });
+  ['nombreEventoId', 'partida', 'sistemaId', 'sedeId', 'narradorId', 'fecha', 'hora', 'descripcion'].forEach((c) => { f.elements[c].value = ev[c]; });
   f.querySelector('button:not(.mini)').textContent = 'Guardar cambios';
   f.scrollIntoView({ behavior: 'smooth' });
 }
 document.getElementById('f-evento').onsubmit = async (ev) => {
   ev.preventDefault();
-  const datos = Object.fromEntries(new FormData(ev.target));
-  const fotoUrl = await subirFotoSiHay();
-  if (fotoUrl) datos.fotoUrl = fotoUrl; // sin foto nueva, panelEditar conserva la existente
-  if (editandoEventoId) {
-    await llamar('panelEditar', 'eventos', editandoEventoId, datos);
-  } else {
-    await llamar('panelCrear', 'eventos', datos);
+  const b = ev.target.querySelector('button:not(.mini)');
+  b.disabled = true;
+  try {
+    const datos = Object.fromEntries(new FormData(ev.target));
+    const fotoUrl = await subirFotoSiHay();
+    if (fotoUrl) datos.fotoUrl = fotoUrl; // sin foto nueva, panelEditar conserva la existente
+    if (editandoEventoId) {
+      await llamar('panelEditar', 'eventos', editandoEventoId, datos);
+    } else {
+      await llamar('panelCrear', 'eventos', datos);
+    }
+    editandoEventoId = null;
+    b.textContent = 'Crear evento';
+    avisar('Guardado.'); ev.target.reset(); recargar();
+  } finally {
+    b.disabled = false;
   }
-  editandoEventoId = null;
-  ev.target.querySelector('button:not(.mini)').textContent = 'Crear evento';
-  avisar('Guardado.'); ev.target.reset(); recargar();
 };
 
 recargar();
