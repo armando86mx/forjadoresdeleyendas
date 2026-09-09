@@ -11,12 +11,15 @@ function archivarMesVencido() {
   // 1. SIEMPRE respaldar antes de borrar: copia completa de la hoja a la carpeta de respaldos.
   var carpetas = DriveApp.getFoldersByName(CARPETA_RESPALDOS);
   var carpeta = carpetas.hasNext() ? carpetas.next() : DriveApp.createFolder(CARPETA_RESPALDOS);
-  var mesRespaldado = vencidos[0].fecha.slice(0, 7);
-  DriveApp.getFileById(ss.getId()).makeCopy('Eventos ' + mesRespaldado, carpeta);
+  var meses = {};
+  vencidos.forEach(function (ev) { meses[ev.fecha.slice(0, 7)] = true; });
+  var nombreRespaldo = 'Eventos ' + Object.keys(meses).sort().join(', ');
+  DriveApp.getFileById(ss.getId()).makeCopy(nombreRespaldo, carpeta);
 
   // 2. Borrar ejecuciones vencidas y sus registros.
+  var registros = leerTabla(HOJAS.registros);
   vencidos.forEach(function (ev) {
-    leerTabla(HOJAS.registros)
+    registros
       .filter(function (r) { return String(r.eventoId) === String(ev.id); })
       .forEach(function (r) { borrarFilaPorId(HOJAS.registros, r.id); });
     borrarFilaPorId(HOJAS.eventos, ev.id);

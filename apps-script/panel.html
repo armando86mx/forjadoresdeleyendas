@@ -16,6 +16,7 @@
   ul { list-style: none; padding: 0; }
   li { display: flex; justify-content: space-between; gap: 8px; padding: 8px 0; border-bottom: 1px solid #e5dcc5; align-items: center; }
   #estado { position: fixed; top: 0; left: 0; right: 0; background: #2b6b2f; color: #fff; padding: 8px; text-align: center; display: none; z-index: 9; }
+  label.lbl { display: grid; gap: 4px; font-size: .85rem; font-weight: bold; }
 </style>
 </head>
 <body>
@@ -24,15 +25,15 @@
 
 <h2>Nueva ejecución</h2>
 <form id="f-evento">
-  <select name="nombreEventoId" id="sel-nombre-evento" required></select>
-  <input name="partida" placeholder="Partida" required>
-  <select name="sistemaId" id="sel-sistema" required></select>
-  <select name="sedeId" id="sel-sede" required></select>
-  <select name="narradorId" id="sel-narrador" required></select>
-  <input name="fecha" type="date" required>
-  <input name="hora" type="time" required>
-  <textarea name="descripcion" placeholder="Descripción de la aventura" rows="3" required></textarea>
-  <input type="file" id="foto" accept="image/*">
+  <label class="lbl">Nombre del evento<select name="nombreEventoId" id="sel-nombre-evento" required></select></label>
+  <label class="lbl">Partida<input name="partida" placeholder="Partida" required></label>
+  <label class="lbl">Sistema de juego<select name="sistemaId" id="sel-sistema" required></select></label>
+  <label class="lbl">Mazmorra (sede)<select name="sedeId" id="sel-sede" required></select></label>
+  <label class="lbl">Narrador<select name="narradorId" id="sel-narrador" required></select></label>
+  <label class="lbl">Fecha<input name="fecha" type="date" required></label>
+  <label class="lbl">Hora<input name="hora" type="time" required></label>
+  <label class="lbl">Descripción de la aventura<textarea name="descripcion" placeholder="Descripción de la aventura" rows="3" required></textarea></label>
+  <label class="lbl">Foto (opcional)<input type="file" id="foto" accept="image/*"></label>
   <button>Crear evento</button>
 </form>
 <ul id="l-eventos"></ul>
