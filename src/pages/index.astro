@@ -9,10 +9,8 @@ import { SESION, CAMPANAS } from '@/data/precios';
 import { MENU, CATEGORIAS } from '@/data/menu';
 
 import heroTaberna from '@/assets/img/hero-taberna.jpg';
-import guardian from '@/assets/img/guardian.jpg';
 import mesaJuego from '@/assets/img/mesa-juego.jpg';
 import banquete from '@/assets/img/banquete.jpg';
-import escenografia from '@/assets/img/escenografia.jpg';
 import novatos from '@/assets/img/novatos.jpg';
 
 // Servicios en pausa (2026-11): la posada no está ofreciendo alimentos ni cobrando
@@ -29,32 +27,11 @@ const pasos = [
   },
   {
     titulo: 'Elige tu destino',
-    texto: 'Escríbenos por WhatsApp y cuéntanos qué aventura buscan. Nosotros preparamos todo: reglas, dados, historia.',
+    texto: 'Consulta el tablón de eventos y elige la mesa que buscan. Nosotros preparamos todo: reglas, dados, historia.',
   },
   {
     titulo: 'Lanza el dado',
     texto: 'Llega a la posada y déjate llevar. Tu Guardián de Historias se encarga de que tu primera partida sea legendaria.',
-  },
-];
-
-const incluye = [
-  {
-    titulo: 'Guardián de Historias',
-    texto: 'Más que un Dungeon Master: un narrador experto que adapta la aventura a tu grupo y convierte cada decisión en un momento épico.',
-    img: guardian,
-    alt: 'Guardián de Historias narrando una aventura de rol en la posada',
-  },
-  {
-    titulo: 'Escenografía inmersiva',
-    texto: 'Mapas digitales interactivos, iluminación y ambientación que te meten de lleno en la historia.',
-    img: escenografia,
-    alt: 'Escenografía digital e interactiva de una mazmorra de fantasía',
-  },
-  {
-    titulo: 'Todo el equipo',
-    texto: 'Dados, miniaturas, hojas de personaje y accesorios. Solo trae tu imaginación.',
-    img: mesaJuego,
-    alt: 'Mesa de juego con dados, miniaturas y hojas de personaje',
   },
 ];
 
@@ -63,7 +40,7 @@ const jsonLd = JSON.stringify({
   '@type': 'LocalBusiness',
   additionalType: 'https://schema.org/EntertainmentBusiness',
   name: 'Forjadores de Leyendas',
-  description: 'Posada temática con sesiones privadas de Dungeons & Dragons y juegos de rol en Puebla.',
+  description: 'Comunidad de juegos de rol con partidas abiertas en Puebla, Ciudad de México y Guadalajara.',
   url: SITE.url,
   telephone: '+' + SITE.whatsapp,
   address: {
@@ -76,8 +53,6 @@ const jsonLd = JSON.stringify({
   },
   sameAs: Object.values(SITE.social),
 }).replace(/</g, '\\u003c');
-
-const direccionCompleta = `${SITE.address.street}, ${SITE.address.neighborhood}, ${SITE.address.city}, ${SITE.address.state} ${SITE.address.zip}, México`;
 ---
 <BaseLayout title="Forjadores de Leyendas — Sesiones de rol y D&D en Puebla" description={SITE.description}>
   <section class="relative flex min-h-[85vh] items-center justify-center overflow-hidden">
@@ -96,7 +71,7 @@ const direccionCompleta = `${SITE.address.street}, ${SITE.address.neighborhood},
         Cada tirada de dados forja una leyenda
       </h1>
       <p class="mx-auto mt-6 max-w-prose text-base opacity-90 sm:text-lg">
-        Sesiones privadas de Dungeons &amp; Dragons y juegos de rol en una posada temática en el corazón de Puebla, guiadas por un Guardián de Historias que hará tu aventura inolvidable.
+        Partidas abiertas de Dungeons &amp; Dragons y otros juegos de rol en las mazmorras de Puebla, Ciudad de México y Guadalajara. Elige tu mesa, aparta tu lugar y llega a jugar: el narrador se encarga del resto.
       </p>
       <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
         <a
@@ -108,6 +83,8 @@ const direccionCompleta = `${SITE.address.street}, ${SITE.address.neighborhood},
       </div>
     </div>
   </section>
+
+  <Eventos />
 
   <section class="bg-parchment-light">
     <div class="mx-auto max-w-6xl px-4 py-16">
@@ -137,31 +114,6 @@ const direccionCompleta = `${SITE.address.street}, ${SITE.address.neighborhood},
       </div>
     </div>
   </section>
-
-  <section class="bg-parchment">
-    <div class="mx-auto max-w-6xl px-4 py-16">
-      <SectionTitle title="Qué incluye tu sesión" />
-      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-        {incluye.map((item) => (
-          <div class="card overflow-hidden rounded-xl bg-parchment-light">
-            <Image
-              src={item.img}
-              alt={item.alt}
-              class="h-48 w-full object-cover"
-              widths={[400, 800]}
-              sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-            />
-            <div class="p-5">
-              <h3 class="font-display text-lg font-bold text-wood">{item.titulo}</h3>
-              <p class="mt-2 text-sm opacity-90">{item.texto}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <Eventos />
 
   {MOSTRAR_PRECIOS && (
   <section id="precios" class="bg-parchment-light">
@@ -280,31 +232,17 @@ const direccionCompleta = `${SITE.address.street}, ${SITE.address.neighborhood},
     </div>
   </section>
 
-  <section class="bg-parchment-light">
-    <div class="mx-auto max-w-6xl px-4 py-16">
-      <SectionTitle title="Encuéntranos en el Barrio de Analco" />
-      <p class="mx-auto max-w-prose text-center opacity-90">
-        A unos pasos del centro histórico de Puebla, en el Barrio de Analco.
-      </p>
-      <p class="mt-2 text-center font-display text-lg text-wood">{direccionCompleta}</p>
-      <div class="mt-8 overflow-hidden rounded-xl shadow-md">
-        <iframe
-          src="https://www.google.com/maps?q=C.+12+Sur+908-1,+Barrio+de+Analco,+Puebla&output=embed"
-          loading="lazy"
-          title="Mapa de la posada"
-          class="h-96 w-full border-0"
-          referrerpolicy="no-referrer-when-downgrade"
-        ></iframe>
-      </div>
-    </div>
-  </section>
-
   <section class="bg-ink text-parchment-light">
     <div class="mx-auto max-w-3xl px-4 py-16 text-center">
       <h2 class="font-display text-3xl font-bold sm:text-4xl">¿Listo para comenzar tu aventura?</h2>
       <p class="mt-4 opacity-90">La posada tiene una mesa esperando a tu grupo. Que los dados decidan el resto.</p>
       <div class="mt-8">
-        <WhatsAppButton message="¡Saludos, Guardián! Quiero reservar una sesión de rol en la posada. 🎲" label="Reserva tu aventura" />
+        <a
+          href="#eventos"
+          class="inline-block rounded-lg bg-fire px-6 py-3 font-display font-bold tracking-wide text-parchment-light no-underline transition-[color,background-color,border-color,box-shadow,transform] duration-200 ease-out hover:bg-amber hover:text-ink hover:shadow-md active:translate-y-px active:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2"
+        >
+          Reserva tu aventura
+        </a>
       </div>
     </div>
   </section>
