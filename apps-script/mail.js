@@ -5,13 +5,15 @@ function enviarConfirmaciones_(eventoId, personas) {
     var cuerpo = [
       '¡Saludos, ' + p.nombre + '! Tu lugar está reservado. Estos son los detalles de tu aventura:',
       '',
-      'Evento: ' + ev.nombre,
+      'Evento: ' + ev.evento,
+      'Partida: ' + ev.partida,
+      'Sistema: ' + ev.sistema,
       'Fecha: ' + ev.fecha + ' a las ' + ev.hora + ' h',
-      'Guildmaster: ' + ev.guildmaster,
+      'Narrador: ' + ev.narrador,
       'Ciudad: ' + ev.ciudad,
-      'Sede: ' + ev.sede.nombre,
-      'Dirección: ' + ev.sede.direccion,
-      'Cómo llegar: ' + ev.sede.mapsUrl,
+      'Mazmorra: ' + ev.mazmorra.nombre,
+      'Dirección: ' + ev.mazmorra.direccion,
+      'Cómo llegar: ' + ev.mazmorra.mapsUrl,
       '',
       ev.descripcion,
       '',
@@ -21,7 +23,7 @@ function enviarConfirmaciones_(eventoId, personas) {
     try {
       MailApp.sendEmail({
         to: p.correo,
-        subject: 'Tu registro: ' + ev.nombre + ' — ' + ev.fecha,
+        subject: 'Tu registro: ' + ev.partida + ' — ' + ev.fecha,
         body: cuerpo,
         name: 'Forjadores de Leyendas',
       });
