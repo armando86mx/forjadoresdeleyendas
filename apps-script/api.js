@@ -44,7 +44,9 @@ function eventosPublicos_() {
   var hoy = ahora.slice(0, 10);
   var ciudades = indicePorId_(leerTabla(HOJAS.ciudades));
   var sedes = indicePorId_(leerTabla(HOJAS.sedes));
-  var gms = indicePorId_(leerTabla(HOJAS.guildmasters));
+  var narradores = indicePorId_(leerTabla(HOJAS.narradores));
+  var nombres = indicePorId_(leerTabla(HOJAS.nombresEventos));
+  var sistemas = indicePorId_(leerTabla(HOJAS.sistemas));
   var registros = leerTabla(HOJAS.registros);
   return leerEventos_()
     .filter(function (ev) { return eventoVisible(ev, hoy); })
@@ -52,14 +54,16 @@ function eventosPublicos_() {
       var sede = sedes[String(ev.sedeId)] || {};
       return {
         id: ev.id,
-        nombre: ev.nombre,
+        evento: (nombres[String(ev.nombreEventoId)] || {}).nombre || '',
+        partida: ev.partida,
+        sistema: (sistemas[String(ev.sistemaId)] || {}).nombre || '',
         descripcion: ev.descripcion,
         fecha: ev.fecha,
         hora: ev.hora,
         fotoUrl: ev.fotoUrl || '',
         ciudad: (ciudades[String(sede.ciudadId)] || {}).nombre || '',
-        sede: { nombre: sede.nombre || '', direccion: sede.direccion || '', mapsUrl: sede.mapsUrl || '' },
-        guildmaster: (gms[String(ev.guildmasterId)] || {}).nombre || '',
+        mazmorra: { nombre: sede.nombre || '', direccion: sede.direccion || '', mapsUrl: sede.mapsUrl || '' },
+        narrador: (narradores[String(ev.narradorId)] || {}).nombre || '',
         lugaresDisponibles: lugaresDisponibles(ev, registros),
         concluido: eventoConcluido(ev, ahora),
       };

@@ -20,3 +20,16 @@ function instalar() {
   var sobrante = ss.getSheetByName('Hoja 1') || ss.getSheetByName('Sheet1');
   if (sobrante && sobrante.getLastRow() === 0) ss.deleteSheet(sobrante);
 }
+
+// FASE 2: borra las pestañas de datos viejas (todo era utilería) y reinstala el esquema nuevo.
+// Correr UNA VEZ desde el editor tras el push de fase 2.
+function resetFase2() {
+  var ss = SpreadsheetApp.getActive();
+  ['Ciudades', 'Sedes', 'Guildmasters', 'Narradores', 'NombresEventos', 'Sistemas', 'Eventos', 'Registros']
+    .forEach(function (nombre) {
+      var h = ss.getSheetByName(nombre);
+      if (h) ss.deleteSheet(h);
+    });
+  instalar();
+  regenerarVista();
+}

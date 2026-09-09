@@ -10,7 +10,9 @@ var CONFIG = {
 var HOJAS = {
   ciudades: 'Ciudades',
   sedes: 'Sedes',
-  guildmasters: 'Guildmasters',
+  narradores: 'Narradores',
+  nombresEventos: 'NombresEventos',
+  sistemas: 'Sistemas',
   eventos: 'Eventos',
   registros: 'Registros',
   vista: 'Eventos del mes',
@@ -19,8 +21,10 @@ var HOJAS = {
 var ENCABEZADOS = {
   Ciudades: ['id', 'nombre'],
   Sedes: ['id', 'ciudadId', 'nombre', 'direccion', 'mapsUrl'],
-  Guildmasters: ['id', 'nombre'],
-  Eventos: ['id', 'nombre', 'descripcion', 'fecha', 'hora', 'sedeId', 'guildmasterId', 'fotoUrl', 'cupo'],
+  Narradores: ['id', 'nombre'],
+  NombresEventos: ['id', 'nombre'],
+  Sistemas: ['id', 'nombre'],
+  Eventos: ['id', 'nombreEventoId', 'partida', 'sistemaId', 'descripcion', 'fecha', 'hora', 'sedeId', 'narradorId', 'fotoUrl', 'cupo'],
   Registros: ['id', 'eventoId', 'nombre', 'telefono', 'correo', 'timestamp'],
 };
 
