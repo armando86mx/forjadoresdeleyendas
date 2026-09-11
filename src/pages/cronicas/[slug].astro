@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import WhatsAppButton from '@/components/WhatsAppButton.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -27,7 +26,12 @@ const jsonLd = JSON.stringify({
     <h1 class="font-display text-wood">{post.data.title}</h1>
     <Content />
     <div class="mt-12 text-center not-prose">
-      <WhatsAppButton message="¡Saludos, Guardián! Leí una crónica y quiero reservar una sesión. 🎲" label="Reserva tu aventura" />
+      <a
+        href="/#eventos"
+        class="inline-block rounded-lg bg-fire px-6 py-3 font-display font-bold tracking-wide text-parchment-light no-underline transition-[color,background-color,border-color,box-shadow,transform] duration-200 ease-out hover:bg-amber hover:text-ink hover:shadow-md active:translate-y-px active:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2"
+      >
+        Únete a una partida
+      </a>
     </div>
   </article>
   <script type="application/ld+json" set:html={jsonLd} is:inline />

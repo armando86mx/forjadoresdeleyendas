@@ -76,7 +76,7 @@ import SectionTitle from '@/components/SectionTitle.astro';
 
   function pintar(eventos: any[]): void {
     if (eventos.length === 0) {
-      cont.innerHTML = `<p class="text-center opacity-80">El posadero está preparando los eventos del mes. Vuelve pronto — o pregúntanos por <a class="underline" href="https://wa.me/522221890232" target="_blank" rel="noopener">WhatsApp</a>.</p>`;
+      cont.innerHTML = `<p class="text-center opacity-80">Estamos preparando los eventos del mes. Vuelve pronto — y si tienes dudas, escríbenos por <a class="underline" href="https://wa.me/522221890232" target="_blank" rel="noopener">WhatsApp</a>.</p>`;
       return;
     }
     const ciudades = [...new Set(eventos.map((ev) => ev.ciudad))];
@@ -97,7 +97,7 @@ import SectionTitle from '@/components/SectionTitle.astro';
       pintar(datos.eventos);
       document.dispatchEvent(new CustomEvent('eventos:pintados', { detail: datos.eventos }));
     } catch {
-      cont.innerHTML = `<p class="text-center opacity-80">El tablón no responde por ahora. Escríbenos por <a class="underline" href="https://wa.me/522221890232" target="_blank" rel="noopener">WhatsApp</a> y te apartamos tu lugar.</p>`;
+      cont.innerHTML = `<p class="text-center opacity-80">El tablón no responde por ahora. Intenta de nuevo en un momento o escríbenos por <a class="underline" href="https://wa.me/522221890232" target="_blank" rel="noopener">WhatsApp</a>.</p>`;
     }
   }
 
@@ -204,7 +204,7 @@ import SectionTitle from '@/components/SectionTitle.astro';
         Array.from({ length: n }, (_, i) => camposPersona(i)).join('');
     });
     form.addEventListener('submit', (e) => { e.preventDefault(); enviar(ev, form); });
-    dialog.showModal();
+    if (!dialog.open) dialog.showModal();
     cargarRecaptcha().catch(() => {}); // precarga; si falla aquí, enviar() lo reintenta y avisa
   }
 
