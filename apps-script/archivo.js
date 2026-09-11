@@ -9,8 +9,7 @@ function archivarMesVencido() {
   if (vencidos.length === 0) return;
 
   // 1. SIEMPRE respaldar antes de borrar: copia completa de la hoja a la carpeta de respaldos.
-  var carpetas = DriveApp.getFoldersByName(CARPETA_RESPALDOS);
-  var carpeta = carpetas.hasNext() ? carpetas.next() : DriveApp.createFolder(CARPETA_RESPALDOS);
+  var carpeta = carpetaSegura_(CARPETA_RESPALDOS);
   var meses = {};
   vencidos.forEach(function (ev) { meses[ev.fecha.slice(0, 7)] = true; });
   var nombreRespaldo = 'Eventos ' + Object.keys(meses).sort().join(', ');

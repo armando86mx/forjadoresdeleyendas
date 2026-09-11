@@ -49,3 +49,17 @@ function actualizarFilaPorId(nombre, id, obj) {
 function nuevoId_() {
   return Utilities.getUuid().slice(0, 8);
 }
+
+// Solo carpetas PROPIAS: evita que una carpeta homónima compartida por un
+// tercero capture respaldos o fotos (los nombres de carpeta son públicos en el repo).
+function carpetaSegura_(nombre) {
+  var propio = Session.getEffectiveUser().getEmail();
+  var it = DriveApp.getFoldersByName(nombre);
+  while (it.hasNext()) {
+    var c = it.next();
+    try {
+      if (c.getOwner() && c.getOwner().getEmail() === propio) return c;
+    } catch (e) { /* carpeta sin dueño legible: ignorar */ }
+  }
+  return DriveApp.createFolder(nombre);
+}

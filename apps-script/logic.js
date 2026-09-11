@@ -31,7 +31,9 @@ function validarPersonas(personas) {
     var correo = String(p.correo || '').trim().toLowerCase();
     var telefono = String(p.telefono || '').replace(/\D/g, '');
     if (nombre.length < 2) return 'Falta el nombre de la persona ' + (i + 1) + '.';
+    if (nombre.length > 80) return 'El nombre de la persona ' + (i + 1) + ' es demasiado largo.';
     if (!RE_CORREO.test(correo)) return 'El correo de ' + nombre + ' no es válido.';
+    if (correo.length > 254) return 'El correo de ' + nombre + ' es demasiado largo.';
     if (telefono.length !== 10) return 'El teléfono de ' + nombre + ' debe tener 10 dígitos.';
     if (vistos[correo]) return 'El correo ' + correo + ' está repetido en el formulario.';
     vistos[correo] = true;

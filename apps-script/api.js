@@ -72,58 +72,66 @@ function eventosPublicos_() {
 }
 
 function doPost(e) {
-  var datos;
   try {
-    datos = JSON.parse(e.postData.contents);
-  } catch (err) {
-    return json_({ ok: false, error: 'Solicitud inválida.' });
-  }
-
-  // Honeypot: un humano nunca ve este campo; si viene lleno es un bot. Fingimos éxito.
-  if (datos.apellido2) return json_({ ok: true });
-
-  if (!verificarRecaptcha_(datos.recaptchaToken)) {
-    return json_({ ok: false, error: 'No pudimos verificar que eres humano. Recarga la página e intenta de nuevo.' });
-  }
-
-  var candado = LockService.getScriptLock();
-  try {
-    candado.waitLock(10000);
-  } catch (err) {
-    return json_({ ok: false, error: 'El tablón está muy solicitado. Intenta de nuevo en un momento.' });
-  }
-  var personas = datos.personas || [];
-  try {
-    var evento = leerEventos_().filter(function (ev) { return String(ev.id) === String(datos.eventoId); })[0];
-    var registrosDelEvento = leerTabla(HOJAS.registros).filter(function (r) { return String(r.eventoId) === String(datos.eventoId); });
-    var error = validarRegistro(personas, evento, registrosDelEvento, ahoraIso_());
-    if (error) {
-      return json_({
-        ok: false,
-        error: error,
-        lugaresDisponibles: evento ? lugaresDisponibles(evento, registrosDelEvento) : 0,
-      });
+    var datos;
+    try {
+      datos = JSON.parse(e.postData.contents);
+    } catch (err) {
+      return json_({ ok: false, error: 'Solicitud inválida.' });
     }
-    personas.forEach(function (p) {
-      agregarFila(HOJAS.registros, {
-        id: nuevoId_(), eventoId: evento.id,
-        nombre: p.nombre, telefono: p.telefono, correo: p.correo,
-        timestamp: ahoraIso_(),
+
+    // Honeypot: un humano nunca ve este campo; si viene lleno es un bot. Fingimos éxito.
+    if (datos.apellido2) return json_({ ok: true });
+
+    if (!verificarRecaptcha_(datos.recaptchaToken)) {
+      return json_({ ok: false, error: 'No pudimos verificar que eres humano. Recarga la página e intenta de nuevo.' });
+    }
+
+    var candado = LockService.getScriptLock();
+    try {
+      candado.waitLock(10000);
+    } catch (err) {
+      return json_({ ok: false, error: 'El tablón está muy solicitado. Intenta de nuevo en un momento.' });
+    }
+    var personas = datos.personas || [];
+    try {
+      var evento = leerEventos_().filter(function (ev) { return String(ev.id) === String(datos.eventoId); })[0];
+      var registrosDelEvento = leerTabla(HOJAS.registros).filter(function (r) { return String(r.eventoId) === String(datos.eventoId); });
+      var error = validarRegistro(personas, evento, registrosDelEvento, ahoraIso_());
+      if (error) {
+        return json_({
+          ok: false,
+          error: error,
+          lugaresDisponibles: evento ? lugaresDisponibles(evento, registrosDelEvento) : 0,
+        });
+      }
+      personas.forEach(function (p) {
+        agregarFila(HOJAS.registros, {
+          id: nuevoId_(), eventoId: evento.id,
+          nombre: p.nombre, telefono: p.telefono, correo: p.correo,
+          timestamp: ahoraIso_(),
+        });
       });
-    });
-    regenerarVista();
-  } finally {
-    candado.releaseLock();
+      regenerarVista();
+    } finally {
+      candado.releaseLock();
+    }
+    enviarConfirmaciones_(datos.eventoId, personas); // fuera del candado: el correo es lento
+    return json_({ ok: true });
+  } catch (err) {
+    console.error('doPost falló: ' + err);
+    return json_({ ok: false, error: 'El tablón tuvo un tropiezo. Intenta de nuevo en un momento.' });
   }
-  enviarConfirmaciones_(datos.eventoId, personas); // fuera del candado: el correo es lento
-  return json_({ ok: true });
 }
 
 function verificarRecaptcha_(token) {
   var secreto = PropertiesService.getScriptProperties().getProperty('RECAPTCHA_SECRET');
-  // Modo desarrollo: sin secreto configurado no se exige CAPTCHA. La Task 11
-  // configura el secreto real; en producción SIEMPRE debe estar presente.
-  if (!secreto) return true;
+  if (!secreto) {
+    // FAIL-CLOSED: sin secreto configurado NO se aceptan registros (las Script
+    // Properties no viajan al copiar la hoja; esto evita quedar sin CAPTCHA en
+    // silencio tras una migración). Para desarrollo: propiedad MODO = dev.
+    return PropertiesService.getScriptProperties().getProperty('MODO') === 'dev';
+  }
   if (!token) return false;
   try {
     var resp = UrlFetchApp.fetch('https://www.google.com/recaptcha/api/siteverify', {
@@ -132,7 +140,8 @@ function verificarRecaptcha_(token) {
       muteHttpExceptions: true,
     });
     var r = JSON.parse(resp.getContentText());
-    return !!r.success && (r.score === undefined || r.score >= CONFIG.recaptchaMinScore);
+    return !!r.success && r.action === 'registro' &&
+      (r.score === undefined || r.score >= CONFIG.recaptchaMinScore);
   } catch (err) {
     // Falla de red hacia siteverify: doPost debe responder JSON bien formado, no una página de error.
     console.error('Verificación reCAPTCHA falló: ' + err);

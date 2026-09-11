@@ -7,6 +7,9 @@ function regenerarVista() {
   // huérfanos de regeneraciones anteriores desalinearían filas futuras.
   h.getRange(1, 1, h.getMaxRows(), h.getMaxColumns()).breakApart();
   h.clear();
+  // Texto plano SIEMPRE: un nombre/correo malicioso que empiece con '=' sería una
+  // fórmula ejecutable en Sheets (exfiltración de PII). Formato '@' lo neutraliza.
+  h.getRange(1, 1, h.getMaxRows(), h.getMaxColumns()).setNumberFormat('@');
   var registros = leerTabla(HOJAS.registros);
   var fila = 1;
   eventosPublicos_().forEach(function (ev) {

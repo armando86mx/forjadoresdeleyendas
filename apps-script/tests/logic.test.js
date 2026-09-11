@@ -55,3 +55,7 @@ test('rechaza correo ya registrado en el evento', () => {
 test('registro válido devuelve null', () => {
   assert.equal(validarRegistro([persona(1), persona(2)], EV, [registro(1)], '2026-09-01 12:00'), null);
 });
+test('rechaza nombre y correo desmesurados', () => {
+  assert.match(validarPersonas([{ nombre: 'x'.repeat(81), correo: 'a@b.co', telefono: '2221234567' }]), /demasiado largo/);
+  assert.match(validarPersonas([{ nombre: 'Ana', correo: 'a'.repeat(250) + '@b.co', telefono: '2221234567' }]), /demasiado largo/);
+});

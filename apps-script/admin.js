@@ -43,6 +43,10 @@ function panelCrear(tabla, obj) {
   var fila = { id: nuevoId_() };
   var enc = ENCABEZADOS[nombre];
   enc.forEach(function (col) { if (obj[col] !== undefined) fila[col] = String(obj[col]).trim(); });
+  ['mapsUrl', 'fotoUrl'].forEach(function (campo) {
+    var v = fila[campo];
+    if (v && String(v).indexOf('https://') !== 0) throw new Error('El enlace de ' + campo + ' debe iniciar con https://');
+  });
   if (TABLAS_CATALOGO_.indexOf(tabla) !== -1) {
     // Un catálogo con nombre repetido solo puede ser un accidente (doble clic, error de captura).
     var nombreNuevo = String(fila.nombre).trim().toLowerCase();
@@ -67,6 +71,10 @@ function panelEditar(tabla, id, obj) {
   ENCABEZADOS[nombre].forEach(function (col) {
     if (col !== 'id' && obj[col] !== undefined) limpio[col] = String(obj[col]).trim();
   });
+  ['mapsUrl', 'fotoUrl'].forEach(function (campo) {
+    var v = limpio[campo];
+    if (v && String(v).indexOf('https://') !== 0) throw new Error('El enlace de ' + campo + ' debe iniciar con https://');
+  });
   if (tabla === 'eventos' && limpio.sedeId !== undefined && limpio.fecha !== undefined && limpio.hora !== undefined) {
     if (chocaEjecucion_(limpio, id)) throw new Error('Esa mazmorra ya tiene una partida a esa hora.');
   }
@@ -90,8 +98,7 @@ function panelBorrar(tabla, id) {
 
 function panelGuardarFoto(base64, nombreArchivo) {
   exigirAdmin_();
-  var carpetas = DriveApp.getFoldersByName(CONFIG.carpetaFotos);
-  var carpeta = carpetas.hasNext() ? carpetas.next() : DriveApp.createFolder(CONFIG.carpetaFotos);
+  var carpeta = carpetaSegura_(CONFIG.carpetaFotos);
   var blob = Utilities.newBlob(Utilities.base64Decode(base64), 'image/jpeg', nombreArchivo);
   var archivo = carpeta.createFile(blob);
   archivo.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
