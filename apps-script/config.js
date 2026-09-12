@@ -1,7 +1,7 @@
 // Configuración global. La hoja no necesita ID: el script está pegado a ella.
 var CONFIG = {
   cupoPorEvento: 6,
-  adminEmails: ['juanarmandoaguilargalindo@gmail.com'], // al traspasar a Pollo: cambiar por su cuenta
+  adminEmails: ['forjadoresdeleyendas@gmail.com'], // la cuenta del colectivo es la dueña y única admin
   recaptchaMinScore: 0.5,
   carpetaFotos: 'Forjadores — Fotos de eventos',
   zonaHoraria: 'America/Mexico_City',
