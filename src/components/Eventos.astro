@@ -122,7 +122,22 @@ import SectionTitle from '@/components/SectionTitle.astro';
         await abrirRegistro(btn.dataset.id!);
       });
     });
+    abrirDeepLink();
   });
+
+  // Enlace directo a una partida: /?partida=<id> baja al tablón y abre su formulario.
+  // Si la partida ya no está (mes vencido, borrada, llena), deja al visitante en el
+  // tablón general sin error. Se procesa una sola vez por carga de página.
+  let deepLinkProcesado = false;
+  function abrirDeepLink(): void {
+    if (deepLinkProcesado) return;
+    deepLinkProcesado = true;
+    const id = new URLSearchParams(location.search).get('partida');
+    if (!id) return;
+    document.getElementById('eventos')?.scrollIntoView({ behavior: 'smooth' });
+    const ev = eventosCache.find((x) => String(x.id) === String(id));
+    if (ev && !ev.concluido && ev.lugaresDisponibles > 0) void abrirRegistro(id);
+  }
 
   // Una sola promesa de carga: "existe window.grecaptcha" NO significa "está listo" —
   // esperar siempre a grecaptcha.ready evita la carrera al enviar rápido el formulario.

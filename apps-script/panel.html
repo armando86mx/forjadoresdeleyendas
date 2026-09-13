@@ -112,7 +112,8 @@ function pintar() {
   lista('l-sistemas', D.sistemas, (f) => f.nombre, 'sistemas');
   document.getElementById('l-eventos').innerHTML = D.eventos.map((f) =>
     `<li><span>${esc(`${f.partida} — ${nombreDe(D.nombresEventos, f.nombreEventoId)} — ${f.fecha} ${f.hora} — ${nombreDe(D.sedes, f.sedeId)}`)}</span>` +
-    `<span class="acciones"><button class="mini" onclick="editarEvento('${esc(f.id)}')">Editar</button>` +
+    `<span class="acciones"><button class="mini" onclick="copiarEnlace('${esc(f.id)}')">Enlace</button>` +
+    `<button class="mini" onclick="editarEvento('${esc(f.id)}')">Editar</button>` +
     `<button class="mini" onclick="borrar(this,'eventos','${esc(f.id)}')">Borrar</button></span></li>`
   ).join('') || '<li>Sin datos.</li>';
   pintarRegistros();
@@ -125,6 +126,18 @@ function pintarRegistros() {
     `<button class="mini" onclick="borrar(this,'registros','${esc(r.id)}')">Liberar lugar</button></li>`
   ).join('') || '<li>Sin registros.</li>';
 }
+// Enlace directo a la partida en el sitio: un clic y queda en el portapapeles,
+// listo para compartir en el chat del colectivo o en historias.
+async function copiarEnlace(id) {
+  const url = 'https://forjadoresdeleyendas.mx/?partida=' + id;
+  try {
+    await navigator.clipboard.writeText(url);
+    avisar('Enlace copiado: ' + url);
+  } catch (e) {
+    prompt('Copia el enlace de la partida:', url);
+  }
+}
+
 async function borrar(btn, tabla, id) {
   if (!confirm('¿Seguro? Esta acción no se puede deshacer.')) return;
   btn.disabled = true;
