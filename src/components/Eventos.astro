@@ -136,7 +136,7 @@ import SectionTitle from '@/components/SectionTitle.astro';
     if (!id) return;
     document.getElementById('eventos')?.scrollIntoView({ behavior: 'smooth' });
     const ev = eventosCache.find((x) => String(x.id) === String(id));
-    if (ev && !ev.concluido && ev.lugaresDisponibles > 0) void abrirRegistro(id);
+    if (ev && !ev.concluido && ev.lugaresDisponibles > 0) void abrirRegistro(id, true);
   }
 
   // Una sola promesa de carga: "existe window.grecaptcha" NO significa "está listo" —
@@ -188,9 +188,10 @@ import SectionTitle from '@/components/SectionTitle.astro';
       </fieldset>`;
   }
 
-  async function abrirRegistro(id: string): Promise<void> {
+  async function abrirRegistro(id: string, yaFresco = false): Promise<void> {
     // Reconsulta al abrir: cupos frescos en el selector (el servidor sigue siendo el árbitro final).
-    await (window as any).__recargarEventos();
+    // El enlace directo llega con datos recién cargados y salta la reconsulta redundante.
+    if (!yaFresco) await (window as any).__recargarEventos();
     const ev = eventosCache.find((x) => String(x.id) === String(id));
     if (!ev || ev.concluido || ev.lugaresDisponibles === 0) return; // la repintada ya actualizó la tarjeta
     titulo.textContent = ev.partida;
