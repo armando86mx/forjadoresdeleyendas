@@ -129,7 +129,9 @@ function pintarRegistros() {
 // Enlace directo a la partida en el sitio: un clic y queda en el portapapeles,
 // listo para compartir en el chat del colectivo o en historias.
 async function copiarEnlace(id) {
-  const url = 'https://forjadoresdeleyendas.mx/?partida=' + id;
+  // OJO: HtmlService trata "//" dentro de un string como comentario y amputa la
+  // línea al servirla (rompe todo el script). Por eso la URL se arma con join.
+  const url = ['https:', '', 'forjadoresdeleyendas.mx', '?partida=' + id].join('/');
   try {
     await navigator.clipboard.writeText(url);
     avisar('Enlace copiado: ' + url);
