@@ -8,7 +8,69 @@ import SectionTitle from '@/components/SectionTitle.astro';
       Partidas abiertas de rol en las mazmorras de cada ciudad. Aparta tu lugar y llega a jugar: el narrador se encarga del resto.
     </p>
     <div id="eventos-contenido" aria-live="polite">
-      <p class="text-center opacity-70">Consultando el tablón de eventos…</p>
+      <div class="flex flex-col items-center gap-5 py-6">
+        <!-- d20 en SVG puro (~4.5 KB, sin filtros): icosaedro frontal con las 10 caras visibles de un d20 real,
+             luz arriba-izquierda horneada en degradados. Gira con CSS; quieto si el visitante prefiere menos movimiento. -->
+        <svg class="h-20 w-20 animate-spin [animation-duration:2.6s] motion-reduce:animate-none" viewBox="0 0 100 100" aria-hidden="true" font-family="Cinzel, Georgia, serif" font-weight="700" text-anchor="middle">
+        <defs>
+        <linearGradient id="d20-l" x2="0" y2="1"><stop offset="0" stop-color="#faf3e3"/><stop offset="1" stop-color="#f3e3cb"/></linearGradient>
+        <linearGradient id="d20-m" x2="1" y2="1"><stop offset="0" stop-color="#f3e3cb"/><stop offset="1" stop-color="#e7d0ad"/></linearGradient>
+        <linearGradient id="d20-p" x2=".5" y2=".5"><stop offset="0" stop-color="#f3e3cb"/><stop offset="1" stop-color="#e7d0ad"/></linearGradient>
+        <linearGradient id="d20-r" x2="0" y1="-.2" y2="1.1"><stop offset="0" stop-color="#e7d0ad"/><stop offset="1" stop-color="#a64f22"/></linearGradient>
+        <linearGradient id="d20-s" x2="0" y1="-.3" y2="1"><stop offset="0" stop-color="#e7d0ad"/><stop offset=".55" stop-color="#a64f22"/><stop offset="1" stop-color="#5c4020"/></linearGradient>
+        <linearGradient id="d20-k" x2="1" y2="1"><stop offset="0" stop-color="#a64f22"/><stop offset="1" stop-color="#5c4020"/></linearGradient>
+        <radialGradient id="d20-a" cx="38%" cy="36%" r="74%"><stop offset="0" stop-color="#faf3e3"/><stop offset=".6" stop-color="#f3e3cb"/><stop offset="1" stop-color="#e7d0ad"/></radialGradient>
+        <radialGradient id="d20-b"><stop offset="0" stop-color="#faf3e3"/><stop offset="1" stop-color="#faf3e3" stop-opacity="0"/></radialGradient>
+        <radialGradient id="d20-c" gradientUnits="userSpaceOnUse" cx="10.2" cy="27" r="48"><stop offset="0" stop-color="#e8a33d"/><stop offset="1" stop-color="#e8a33d" stop-opacity="0"/></radialGradient>
+        <radialGradient id="d20-d" gradientUnits="userSpaceOnUse" cx="89.8" cy="73" r="48"><stop offset="0" stop-color="#2b1f14" stop-opacity=".7"/><stop offset="1" stop-color="#2b1f14" stop-opacity="0"/></radialGradient>
+        <g id="d20-n">
+        <text x="50" y="57.3" font-size="19" letter-spacing="-.5">20</text>
+        <text transform="translate(28.5 37.6) rotate(-60) scale(1 .75)" y="3.2" font-size="8.8">14</text>
+        <text transform="translate(71.5 37.6) rotate(60) scale(1 .75)" y="3.2" font-size="8.8">2</text>
+        </g>
+        <text id="d20-e" transform="translate(50 74.8) rotate(180) scale(1 .75)" y="3.2" font-size="8.8">8</text>
+        </defs>
+        <g stroke="#a64f22" stroke-width=".9" stroke-linejoin="round">
+        <polygon points="50,21.6 25.4,64.2 10.2,27" fill="#faf3e3"/>
+        <polygon points="50,21.6 10.2,27 50,4" fill="url(#d20-l)"/>
+        <polygon points="50,21.6 89.8,27 50,4" fill="url(#d20-m)"/>
+        <polygon points="25.4,64.2 10.2,73 10.2,27" fill="url(#d20-m)"/>
+        <polygon points="50,21.6 74.6,64.2 89.8,27" fill="url(#d20-p)"/>
+        <polygon points="74.6,64.2 89.8,73 89.8,27" fill="url(#d20-r)"/>
+        <polygon points="25.4,64.2 10.2,73 50,96" fill="url(#d20-r)"/>
+        <polygon points="25.4,64.2 74.6,64.2 50,96" fill="url(#d20-s)"/>
+        <polygon points="74.6,64.2 89.8,73 50,96" fill="url(#d20-k)"/>
+        <polygon points="50,21.6 25.4,64.2 74.6,64.2" fill="url(#d20-a)"/>
+        </g>
+        <circle cx="41" cy="42" r="11" fill="url(#d20-b)"/>
+        <g fill="none" stroke-width="2.3" stroke-linejoin="round">
+        <polygon points="50,4 89.8,27 89.8,73 50,96 10.2,73 10.2,27" stroke="#a64f22"/>
+        <path d="M50 4 10.2 27 10.2 73" stroke="url(#d20-c)"/>
+        <path d="M89.8 27 89.8 73 50 96" stroke="url(#d20-d)"/>
+        </g>
+        <g fill="none" stroke-linecap="round">
+        <path d="M48.8 25.5 27.4 62.5" stroke="#faf3e3" stroke-width="1" stroke-opacity=".95"/>
+        <path d="M48.3 6.6 13.3 26.8M12.5 27.6 47.5 22.8M49.1 6.5V20M51.2 25.5 72.6 62.5" stroke="#faf3e3" stroke-width=".55" stroke-opacity=".8"/>
+        <path d="M27.5 65.1H72.5M73.9 65.9 53.2 92.6M88.4 29.8V70.2M86.7 73.2 51.7 93.4M76 62 88.8 30.8" stroke="#2b1f14" stroke-width=".6" stroke-opacity=".5"/>
+        </g>
+        <use href="#d20-n" fill="#faf3e3" opacity=".85" transform="translate(.5 .9)"/>
+        <use href="#d20-n" fill="#5c4020"/>
+        <use href="#d20-e" fill="#faf3e3" opacity=".8" transform="translate(.4 .7)"/>
+        <use href="#d20-e" fill="#2b1f14"/>
+        <g font-size="8" fill="#5c4020" fill-opacity=".9">
+        <text transform="translate(36.7 17.5) rotate(-30) scale(1 .4)" y="2.8">12</text>
+        <text transform="translate(63.3 17.5) rotate(30) scale(1 .4)" y="2.8">18</text>
+        <text transform="translate(15.2 54.7) rotate(-90) scale(1 .4)" y="2.8">6</text>
+        <path transform="translate(15.2 54.7) rotate(-90) scale(1 .4)" d="M-2.4 4.3h4.8" stroke="#5c4020" stroke-width="1"/>
+        <g fill="#2b1f14" fill-opacity=".8">
+        <text transform="translate(84.8 54.7) rotate(90) scale(1 .4)" y="2.8">10</text>
+        <text transform="translate(28.5 77.7) rotate(30) scale(1 .4)" y="2.8">4</text>
+        <text transform="translate(71.5 77.7) rotate(-30) scale(1 .4)" y="2.8">16</text>
+        </g>
+        </g>
+        </svg>
+        <p class="font-display text-xl text-wood sm:text-2xl">Consultando el tablón de eventos…</p>
+      </div>
     </div>
   </div>
 </section>
